@@ -1,4 +1,4 @@
-#include "drivers/io.h"
+#include "drivers/framebuffer.h"
 
 int main() {
     fb_write_cell(0, 'A', FB_GREEN, FB_DARK_GREY);

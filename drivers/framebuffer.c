@@ -1,3 +1,4 @@
+#include "framebuffer.h"
 #include "io.h"
 
 // Starting memory address for VGA text mode
