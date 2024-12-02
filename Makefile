@@ -1,8 +1,8 @@
 OBJECTS = loader.o kmain.o drivers/framebuffer.o io.o
 CC = gcc
 CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
-			-nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
-LDFLAGS = -T link.ld -melf_i386
+			-nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c -g
+LDFLAGS = -T link.ld -melf_i386 -g
 AS = nasm
 ASFLAGS = -f elf
 
