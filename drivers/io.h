@@ -9,4 +9,11 @@
 */
 void outb(unsigned short port, unsigned char data);
 
+/** inb:
+ *      Read a byte from a given I/O port
+ *      @param port The address of the port
+ *      @return the read byte
+ */
+unsigned char inb(unsigned short port);
+
 #endif /* INCLUDE_IO_H */
