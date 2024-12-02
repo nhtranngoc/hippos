@@ -4,6 +4,7 @@ MAGIC_NUMBER equ 0x1BADB002     ; define the magic number constant
 FLAGS        equ 0x0            ; multiboot flags
 CHECKSUM     equ -MAGIC_NUMBER  ; calculate the checksum
                                 ; (magic number + checksum + flags should equal 0)
+KERNEL_STACK_SIZE equ 4096      ; size of stack in bytes
 
 section .text:                  ; start of the text (code) section
 align 4                         ; the code must be 4 byte aligned
@@ -11,7 +12,20 @@ align 4                         ; the code must be 4 byte aligned
     dd FLAGS                    ; the flags,
     dd CHECKSUM                 ; and the checksum
 
+section .bss:
+align 4
+kernel_stack:                   ; label points to beginning of memory
+    resb KERNEL_STACK_SIZE      ; reserve stack for the kernel
+
 loader:                         ; the loader label (defined as entry point in linker script)
     mov eax, 0xCAFEBABE         ; place the number 0xCAFEBABE in the register eax
+    mov esp, kernel_stack + KERNEL_STACK_SIZE   ; point esp to the start of the stack (end of memory area)
+
+    extern sum_of_three         ; the function sum_of_three is defined in kmain.c
+    push dword 3                ; arg 3
+    push dword 2                ; arg 2
+    push dword 1                ; arg 1
+    call sum_of_three           ; call the function, results will be stored in EAX (in this case, should be 6)
+
 .loop:
     jmp .loop                   ; loop forever

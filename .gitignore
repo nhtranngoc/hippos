@@ -60,4 +60,6 @@ dkms.conf
 
 # End of https://www.toptal.com/developers/gitignore/api/c,assembler
 
+# OSDev Specific
 bochslog.txt
+*.iso
