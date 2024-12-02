@@ -21,11 +21,8 @@ loader:                         ; the loader label (defined as entry point in li
     mov eax, 0xCAFEBABE         ; place the number 0xCAFEBABE in the register eax
     mov esp, kernel_stack + KERNEL_STACK_SIZE   ; point esp to the start of the stack (end of memory area)
 
-    extern sum_of_three         ; the function sum_of_three is defined in kmain.c
-    push dword 3                ; arg 3
-    push dword 2                ; arg 2
-    push dword 1                ; arg 1
-    call sum_of_three           ; call the function, results will be stored in EAX (in this case, should be 6)
+    extern main                 ; main function is defined in kmain.c
+    call main                   ; hand over function to C so we don't have to keep writing in Assembly and leave this hellscape
 
 .loop:
     jmp .loop                   ; loop forever
