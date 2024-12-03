@@ -1,4 +1,5 @@
 #include "framebuffer.h"
+#include "utils.h"
 #include "io.h"
 
 // Set default text colors, which is white on black
@@ -78,7 +79,7 @@ int fb_get_col_from_pos(unsigned short pos) {
  *      @return int Current position 
  */
 int fb_get_pos_from_coord(int col, int row) {
-    return 2 * (row * MAX_COLS) + col;
+    return 2 * (row * MAX_COLS + col);
 }
 
 /** fb_move_pos_to_newline
@@ -90,6 +91,39 @@ int fb_move_pos_to_newline(int pos) {
     return fb_get_pos_from_coord(0, fb_get_row_from_pos(pos) + 1);
 }
 
+/** fb_clear
+ *      Clear the screen
+*/
+void fb_clear() {
+    for (int i = 0; i < MAX_COLS * MAX_ROWS; i++) {
+        fb_write_cell(i * 2, ' ', FB_BLACK, FB_BLACK);
+    }
+    fb_set_cursor(fb_get_pos_from_coord(0,0));
+}
+
+/** fb_scroll
+ *      Scroll the screen to a new line by moving the buffer of row 1 up to 0, then clear the last row, then readjust cursor positioning
+ *      
+ *      @param pos Current position of the cursor 
+ *      @return New position of the cursor
+*/
+int fb_scroll(int pos) {
+    // Move the screen up by 1
+    ut_memory_copy(
+        (char *) (fb_get_pos_from_coord(0, 1) + VIDEO_ADDRESS),
+        (char *) (fb_get_pos_from_coord(0, 0) + VIDEO_ADDRESS),
+        MAX_COLS * (MAX_ROWS - 1) * 2
+    );
+
+    // Clear last line
+    for (int col = 0; col < MAX_COLS; col++) {
+        fb_write_cell(fb_get_pos_from_coord(col, MAX_ROWS - 1), ' ', bg_color, bg_color);
+    }
+
+    // Return new cursor position
+    return pos - (2 * MAX_COLS);
+}
+
 /** fb_write
     *   Write a string with a given length to the framebuffer
     *   
@@ -99,6 +133,10 @@ int fb_write(char *buf) {
     int pos = fb_get_cursor();
     int i = 0;
     while (buf[i] != 0) {
+        if (pos >= MAX_COLS * MAX_ROWS * 2) {
+            pos = fb_scroll(pos);
+        }
+
         if (buf[i] == '\n' || fb_get_col_from_pos(pos) >= MAX_COLS) {
             pos = fb_move_pos_to_newline(pos);
         } else {

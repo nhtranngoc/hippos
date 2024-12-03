@@ -1,4 +1,4 @@
-OBJECTS = loader.o kmain.o drivers/framebuffer.o io.o
+OBJECTS = loader.o kmain.o drivers/framebuffer.o io.o drivers/utils.o
 CC = gcc
 CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
 			-nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c -g
@@ -17,6 +17,14 @@ os.iso: kernel.elf
 	
 run: os.iso
 	bochs -f bochsrc.txt -q
+
+debug: debug-qemu debug-ddd
+
+debug-qemu: os.iso
+	qemu-system-i386 -s -S os.iso
+
+debug-ddd: 
+	ddd ---eval-command="target remote localhost:1234"
 
 %.o: %.c
 	$(CC) $(CFLAGS)  $< -o $@

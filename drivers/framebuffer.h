@@ -45,6 +45,8 @@ int fb_get_row_from_pos(unsigned short pos);
 int fb_get_col_from_pos(unsigned short pos);
 int fb_get_pos_from_coord(int col, int row);
 int fb_move_pos_to_newline(int pos);
+int fb_scroll(int pos);
+void fb_clear();
 int fb_write(char *buf);
 
 #endif /* FRAMEBUFFER_H*/

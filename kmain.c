@@ -3,17 +3,23 @@
 int main() {
     // Here is an interesting problem: String length is limited to 64 characters. This might be a problem with how memory is accessed? Need to investigate.
     // This would work (with line wrapping after col 80).
-    char welcome[] = "Welcome to HippOS! After 10 year";
-    char welcome2[] = "s of development, we hope it ";
-    char welcome3[] = "has been worth the weight (of hippo)";
+    // char welcome[] = "Welcome to HippOS! After 10 yea\n";
+    // char welcome2[] = "rs of development, we hope it\n ";
+    // char welcome3[] = "has been worth the weight (of hippo)\n";
 
     // This would not work.
     // char unwelcome[] = "Welcome to HippOS! After 10 years of development, we hope it has been worth the weight (of hippo)";
 
-    fb_write(welcome);
-    fb_write(welcome2);
-    fb_write(welcome3);
-
+    fb_clear();
+    // Test scroll function: print ASCII characters 
+    for(int i = 65; i < 126; i++) {
+        char str[3];
+        str[0] = (char) i;
+        str[1] = '\n';
+        str[2] = '\0';
+        fb_write(str);
+    }
+    // fb_write(welcome);
     return 0;
 }
 
