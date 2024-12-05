@@ -1,6 +1,6 @@
 OBJECTS = loader.o kmain.o drivers/framebuffer.o io.o drivers/utils.o drivers/serialport.o
 CC = gcc
-CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
+CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -fwritable-strings \
 			-nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c -g
 LDFLAGS = -T link.ld -melf_i386 -g
 AS = nasm

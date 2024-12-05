@@ -129,23 +129,59 @@ int fb_scroll(int pos) {
     *   
     *   @param *buf pointer to the string
 */
-int fb_write(char *buf) {
+int fb_write(const char *buf) {
     int pos = fb_get_cursor();
-    int i = 0;
-    while (buf[i] != 0) {
+    while (*buf) {
         if (pos >= MAX_COLS * MAX_ROWS * 2) {
             pos = fb_scroll(pos);
         }
 
-        if (buf[i] == '\n' || fb_get_col_from_pos(pos) >= MAX_COLS) {
+        if (*buf == '\n' || fb_get_col_from_pos(pos) >= MAX_COLS) {
             pos = fb_move_pos_to_newline(pos);
         } else {
-            fb_write_cell(pos, buf[i], fg_color, bg_color);
+            fb_write_cell(pos, *buf, fg_color, bg_color);
             pos += 2;
         }
-        i++;
+        buf++;
     }
     fb_set_cursor(pos);
 
     return 0;
+}
+
+/** fb_set_default_colors
+ *  Set the default text colors back to white on black 
+ * 
+ */
+void fb_set_default_colors() {
+    fg_color = FB_WHITE;
+    bg_color = FB_BLACK;
+}
+
+/** fb_set_fg
+ *  Set the foreground text color to a specified color
+ *  @param color Color to set
+ */
+void fb_set_fg(unsigned short color) {
+    fg_color = color;
+}
+
+/** fb_set_bg
+ * Set the background text color to a specified color
+ * 
+ * @param color Color to set
+ */
+void fb_set_bg(unsigned short color) {
+    bg_color = color;
+}
+
+/** fb_set_colors
+ *  Helper function to set both foreground and background colors
+ * 
+ *  @param fg Foreground color to set
+ *  @param bg Background color to set
+ */
+void fb_set_colors(unsigned short fg, unsigned short bg) {
+    fg_color = fg;
+    bg_color = bg;
 }

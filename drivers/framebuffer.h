@@ -47,6 +47,10 @@ int fb_get_pos_from_coord(int col, int row);
 int fb_move_pos_to_newline(int pos);
 int fb_scroll(int pos);
 void fb_clear();
-int fb_write(char *buf);
+int fb_write(const char *buf);
+void fb_set_default_colors();
+void fb_set_fg(unsigned short color);
+void fb_set_bg(unsigned short color);
+void fb_set_colors(unsigned short fg, unsigned short bg);
 
 #endif /* FRAMEBUFFER_H*/
