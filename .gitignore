@@ -63,3 +63,5 @@ dkms.conf
 # OSDev Specific
 bochslog.txt
 *.iso
+isodir
+sysroot
