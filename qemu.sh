@@ -2,4 +2,4 @@
 set -e
 . ./iso.sh
 
-qemu-system-$(./target-triplet-to-arch.sh $HOST) -cdrom hippos.iso
+qemu-system-$(./target-triplet-to-arch.sh $HOST) -serial stdio -cdrom hippos.iso

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <kernel/tty.h>
+#include <kernel/serialport.h>
 
 char *title_card = 
     "\n\
@@ -27,4 +28,9 @@ void kernel_main(void) {
         str[2] = '\0';
         printf(str);
     }
+
+    sp_setup(COM1);
+
+    char *test_str = "Test";
+    sp_write(test_str, COM1);
 }
