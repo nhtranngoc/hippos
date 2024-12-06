@@ -1,5 +1,5 @@
-#include "serialport.h"
-#include "io.h"
+#include <kernel/serialport.h>
+#include <kernel/io.h>
 
 /** sp_configure_baud_rate:
  *  Sets the speed of the data being sent. The default speed of a serial
