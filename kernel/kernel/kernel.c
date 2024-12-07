@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <kernel/tty.h>
-#include <kernel/serialport.h>
+#include <kernel/serial.h>
 
 char *title_card = 
     "\n\
@@ -29,8 +29,8 @@ void kernel_main(void) {
         printf(str);
     }
 
-    sp_setup(COM1);
+    serial_setup(SERIAL_COM1);
 
     char *test_str = "Test";
-    sp_write(test_str, COM1);
+    serial_write(test_str, SERIAL_COM1);
 }
