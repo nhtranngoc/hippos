@@ -4,7 +4,7 @@
 
 #include <kernel/limine.h>
 // #include <kernel/tty.h>
-// #include <kernel/serial.h>
+#include <kernel/serial.h>
 
 // Set the base revision to 3, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -72,8 +72,14 @@ void kernel_main(void) {
     // Note: we assume the framebuffer model is RGB with 32-bit pixels.
     for (size_t i = 0; i < 100; i++) {
         volatile uint32_t *fb_ptr = framebuffer->address;
-        fb_ptr[i * (framebuffer->pitch / 4) + i] = 0xffffff;
+        fb_ptr[i * (framebuffer->pitch / 4) + i] = 0xff0000;
     }
+
+
+    serial_setup(SERIAL_COM1);
+
+    char *test_str = "Test";
+    serial_write(test_str, SERIAL_COM1);
 
     // We're done, just hang...
     hcf();
@@ -90,8 +96,4 @@ void kernel_main(void) {
     //     printf(str);
     // }
 
-    // serial_setup(SERIAL_COM1);
-
-    // char *test_str = "Test";
-    // serial_write(test_str, SERIAL_COM1);
 }
