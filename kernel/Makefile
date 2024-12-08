@@ -13,13 +13,22 @@ EXEC_PREFIX?=$(PREFIX)
 BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
-CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra
-CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude
-LDFLAGS:=$(LDFLAGS)
+CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra -fno-exceptions -fno-stack-protector -nostdlib \
+    -fno-stack-check \
+    -fno-lto \
+    -fno-PIC \
+    -m64 \
+    -march=x86-64 \
+    -mno-80387
+CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude -DLIMINE_API_REVISION=2 -MMD -MP
+LDFLAGS:=$(LDFLAGS) \
+    -mno-red-zone \
+	-nostdlib \
+    -static \
+    -z max-page-size=0x1000 
 LIBS:=$(LIBS) -nostdlib -lk -lgcc
 
 ARCHDIR=arch/$(HOSTARCH)
-
 include $(ARCHDIR)/make.config
 
 CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS)
@@ -47,14 +56,13 @@ $(LIBS) \
 $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
 
-.PHONY: all clean install install-headers install-kernel
+.PHONY: all clean install install-headers install-kernel limine/limine
 .SUFFIXES: .o .c .S
 
 all: hippos.kernel
 
 hippos.kernel: $(OBJS) $(ARCHDIR)/linker.ld
 	$(CC) -T $(ARCHDIR)/linker.ld -o $@ $(CFLAGS) $(LINK_LIST)
-	grub-file --is-x86-multiboot hippos.kernel
 
 $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
 	OBJ=`$(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=$(@F)` && cp "$$OBJ" $@
@@ -79,5 +87,15 @@ install-headers:
 install-kernel: hippos.kernel
 	mkdir -p $(DESTDIR)$(BOOTDIR)
 	cp hippos.kernel $(DESTDIR)$(BOOTDIR)
+
+limine/limine:
+	rm -rf limine
+	git clone https://github.com/limine-bootloader/limine.git --branch=v8.x-binary --depth=1
+	$(MAKE) -C limine \
+		CC="$(CC)" \
+		CFLAGS="$(CFLAGS)" \
+		CPPFLAGS="$(CPPFLAGS)" \
+		LDFLAGS="$(LDFLAGS)" \
+		LIBS="$(LIBS)"
 
 -include $(OBJS:.o=.d)
