@@ -6,6 +6,10 @@
 // #include <kernel/tty.h>
 #include <kernel/serial.h>
 
+#define SSFN_CONSOLEBITMAP_TRUECOLOR        /* use the special renderer for 32 bit truecolor packed pixels */
+#include <kernel/ssfn.h>
+
+
 // Set the base revision to 3, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
 // See specification for further info.
@@ -80,6 +84,27 @@ void kernel_main(void) {
 
     char *test_str = "Test";
     serial_write(test_str, SERIAL_COM1);
+
+    extern ssfn_font_t _binary_arch_x86_64_u_vga16_sfn_start;
+
+        /* set up context by global variables */
+    ssfn_src = &_binary_arch_x86_64_u_vga16_sfn_start;      /* the bitmap font to use */
+    volatile uint32_t *fb_ptr = framebuffer->address;
+
+    ssfn_dst.ptr = (uint8_t*)fb_ptr;                  /* address of the linear frame buffer */
+    ssfn_dst.w = framebuffer->width;                          /* width */
+    ssfn_dst.h = framebuffer->height;                           /* height */
+    ssfn_dst.p = framebuffer->pitch;
+    ssfn_dst.x = ssfn_dst.y = 0;                /* pen position */
+    ssfn_dst.fg = 0xFFFFFF;                     /* foreground color */
+
+    /* render UNICODE codepoints directly to the screen and then adjust pen position */
+    ssfn_putc('H');
+    ssfn_putc('e');
+    ssfn_putc('l');
+    ssfn_putc('l');
+    ssfn_putc('o');
+
 
     // We're done, just hang...
     hcf();
