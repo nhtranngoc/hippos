@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <kernel/limine.h>
-// #include <kernel/tty.h>
+#include <kernel/tty.h>
 #include <kernel/serial.h>
 
 #define SSFN_CONSOLEBITMAP_TRUECOLOR        /* use the special renderer for 32 bit truecolor packed pixels */
@@ -74,51 +76,46 @@ void kernel_main(void) {
     struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
 
     // Note: we assume the framebuffer model is RGB with 32-bit pixels.
-    for (size_t i = 0; i < 100; i++) {
-        volatile uint32_t *fb_ptr = framebuffer->address;
-        fb_ptr[i * (framebuffer->pitch / 4) + i] = 0xff0000;
-    }
+    // for (size_t i = 0; i < 100; i++) {
+    //     volatile uint32_t *fb_ptr = framebuffer->address;
+    //     fb_ptr[i * (framebuffer->pitch / 4) + i] = 0xff0000;
+    // }
 
 
-    serial_setup(SERIAL_COM1);
+    serial_initialize(SERIAL_COM1);
+    // char *test_str = "Test";
+    // serial_write(test_str, SERIAL_COM1);
 
-    char *test_str = "Test";
-    serial_write(test_str, SERIAL_COM1);
+    // Pass the framebuffer to the terminal, which will update it accordingly
+    terminal_initialize(framebuffer);
+	printf(1, title_card);
+    printf(1, "This is a test to see how long a string can be before line wraps around. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\n");
 
-    extern ssfn_font_t _binary_arch_x86_64_u_vga16_sfn_start;
-
-        /* set up context by global variables */
-    ssfn_src = &_binary_arch_x86_64_u_vga16_sfn_start;      /* the bitmap font to use */
     volatile uint32_t *fb_ptr = framebuffer->address;
 
-    ssfn_dst.ptr = (uint8_t*)fb_ptr;                  /* address of the linear frame buffer */
-    ssfn_dst.w = framebuffer->width;                          /* width */
-    ssfn_dst.h = framebuffer->height;                           /* height */
-    ssfn_dst.p = framebuffer->pitch;
-    ssfn_dst.x = ssfn_dst.y = 0;                /* pen position */
-    ssfn_dst.fg = 0xFFFFFF;                     /* foreground color */
+    // Let's draw a box
+    int height = 30;
+    int width = 30;
+    for (int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++) {
+            // fb_ptr[x + y * 1280] = 0xff0000;
+            *(fb_ptr + x + y * 1280) = 0x00ff00;
+        }
+    }
 
-    /* render UNICODE codepoints directly to the screen and then adjust pen position */
-    ssfn_putc('H');
-    ssfn_putc('e');
-    ssfn_putc('l');
-    ssfn_putc('l');
-    ssfn_putc('o');
-
+    for(int i = 0; i < 45; i++) {
+        ssfn_dst.x += ssfn_src->width * i;
+        char n[10];
+        itoa(i, n, 10);
+        printf(1, n);
+        if(i < 44) {
+            printf(1, "\n");
+        }
+    }
 
     // We're done, just hang...
     hcf();
 
-	// terminal_initialize();
-	// printf(title_card);
-    // printf("This is a test to see how long a string can be before line wraps around. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\n");
-    // printf("Test scrolling function: \n");
-    // for(char i = 65; i < 80; i++) {
-    //     char str[3];
-    //     str[0] = i;
-    //     str[1] = '\n';
-    //     str[2] = '\0';
-    //     printf(str);
-    // }
+    
 
 }

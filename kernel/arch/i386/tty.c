@@ -78,8 +78,8 @@ void terminal_putentryat(unsigned char c, uint8_t color, size_t x, size_t y) {
 void terminal_scroll(void) {
     // Move the screen up by 1
     memmove(
-        (char *) terminal_buffer,
-        (char *) terminal_buffer + 2 * VGA_WIDTH,
+        terminal_buffer,
+        terminal_buffer + 2 * VGA_WIDTH,
         VGA_WIDTH * (VGA_HEIGHT - 1) * 2
     );
 

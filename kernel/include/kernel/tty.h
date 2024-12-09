@@ -4,6 +4,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "limine.h"
+
+// These are only specific to x32, since we have SSFN to help handling cursor position and putchar
+#if defined (__i386__)
 /* The I/O ports */
 #define TTY_COMMAND_PORT         0x3D4
 #define TTY_DATA_PORT            0x3D5
@@ -13,10 +17,15 @@
 
 void terminal_setcursor(int x, int y);
 uint16_t terminal_getcursor(void);
-void terminal_initialize(void);
-void terminal_putchar(char c);
-void terminal_write(const char* data, size_t size);
-void terminal_writestring(const char* data);
+#endif
 
+#if defined(__x86_64__)
+void terminal_initialize(struct limine_framebuffer *framebuffer);
+void terminal_write(const uint8_t* data, size_t size);
+void terminal_writestring(const uint8_t* data);
+void terminal_putchar(uint8_t c);
+#endif
+
+void terminal_scroll(void);
 
 #endif
