@@ -42,12 +42,12 @@ void serial_configure_modem(unsigned short com) {
     outb(SERIAL_MODEM_COMMAND_PORT(com), SERIAL_DEFAULT_MODEM_SETUP);
 }
 
-/** serial_setup
+/** serial_initialize
  *  Setup serial on a COM port using default settings
  * 
  *  @param com      COM port
  */
-void serial_setup(unsigned short com) {
+void serial_initialize(unsigned short com) {
     if (com < 1) {
         return;
     }
