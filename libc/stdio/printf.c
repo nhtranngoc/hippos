@@ -3,16 +3,36 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
+#if defined(__is_libk)
+#include <kernel/serial.h>
+#endif
 
-static bool print(const char* data, size_t length) {
+#define SERIAL 0
+
+static bool print(uint8_t output, const char* data, size_t length) {
 	const unsigned char* bytes = (const unsigned char*) data;
-	for (size_t i = 0; i < length; i++)
-		if (putchar(bytes[i]) == EOF)
-			return false;
+	for (size_t i = 0; i < length; i++){
+		#if defined(__is_libk)
+		if(output == SERIAL) {
+			char cbuf[2];
+			cbuf[0] = bytes[i];
+			cbuf[1] = '\0';
+			serial_write(cbuf, SERIAL_COM1);
+		}
+		#endif
+		if(output != SERIAL) {
+			if (putchar(bytes[i]) == EOF)
+				return false;
+		}
+	}
 	return true;
 }
 
-int printf(const char* restrict format, ...) {
+
+// For now, printf is including an output pipe, 0 for serial, other wise to terminal. 
+// @TODO: Will need to change this to something more elegant.
+int printf(uint8_t output, const char* restrict format, ...) {
 	va_list parameters;
 	va_start(parameters, format);
 
@@ -31,7 +51,7 @@ int printf(const char* restrict format, ...) {
 				// TODO: Set errno to EOVERFLOW.
 				return -1;
 			}
-			if (!print(format, amount))
+			if (!print(output, format, amount))
 				return -1;
 			format += amount;
 			written += amount;
@@ -47,7 +67,7 @@ int printf(const char* restrict format, ...) {
 				// TODO: Set errno to EOVERFLOW.
 				return -1;
 			}
-			if (!print(&c, sizeof(c)))
+			if (!print(output, &c, sizeof(c)))
 				return -1;
 			written++;
 		} else if (*format == 's') {
@@ -58,7 +78,7 @@ int printf(const char* restrict format, ...) {
 				// TODO: Set errno to EOVERFLOW.
 				return -1;
 			}
-			if (!print(str, len))
+			if (!print(output, str, len))
 				return -1;
 			written += len;
 		} else {
@@ -68,7 +88,7 @@ int printf(const char* restrict format, ...) {
 				// TODO: Set errno to EOVERFLOW.
 				return -1;
 			}
-			if (!print(format, len))
+			if (!print(output, format, len))
 				return -1;
 			written += len;
 			format += len;
