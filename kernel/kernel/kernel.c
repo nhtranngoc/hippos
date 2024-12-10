@@ -60,6 +60,33 @@ char *title_card =
                      888      888                             \n\
                      888      888                             \n\n";
 
+// In the future, we want to:
+// 1) Decouple printf function to only one output and return it to standard UNIX compat (without the pipe argument)
+// 2) Move all of this formatting to a klog (heh, Kellogg) library.
+void print_ok(void) {
+    printf(PIPE_TERMINAL, "[");
+    ssfn_dst.fg = 0x00ff00;
+    printf(PIPE_TERMINAL, " OK ");
+    ssfn_dst.fg = 0xffffff;
+    printf(PIPE_TERMINAL, "] ");
+}
+
+void print_debug(void) {
+    printf(PIPE_TERMINAL, "[");
+    ssfn_dst.fg = 0x0000ff;
+    printf(PIPE_TERMINAL, " DEBUG ");
+    ssfn_dst.fg = 0xffffff;
+    printf(PIPE_TERMINAL, "] ");
+}
+
+void print_error(void) {
+    printf(PIPE_TERMINAL, "[");
+    ssfn_dst.fg = 0xff0000;
+    printf(PIPE_TERMINAL, " ERROR ");
+    ssfn_dst.fg = 0xffffff;
+    printf(PIPE_TERMINAL, "] ");
+}
+
 void kernel_main(void) {
     // Ensure the bootloader actually understands our base revision (see spec).
     if (LIMINE_BASE_REVISION_SUPPORTED == false) {
@@ -75,15 +102,18 @@ void kernel_main(void) {
     // Fetch the first framebuffer.
     struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
 
-    serial_initialize(SERIAL_COM1);
-    // Pass the framebuffer to the terminal, which will update it accordingly
     terminal_initialize(framebuffer);
-	printf(PIPE_TERMINAL, title_card);
-    printf(PIPE_TERMINAL, "This is a test to see how long a string can be before line wraps around. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\n");
+    printf(PIPE_TERMINAL, title_card);
+    // Pass the framebuffer to the terminal, which will update it accordingly
+    print_ok();
+    printf(PIPE_TERMINAL, "Framebuffer Initialized.\n");
+    print_ok();
+    printf(PIPE_TERMINAL, "Terminal Initialized.\n");
+
+    serial_initialize(SERIAL_COM1);
+    print_ok();
+    printf(PIPE_TERMINAL, "Serial Port Initialized on COM 1.\n");
 
     // We're done, just hang...
     hcf();
-
-    
-
 }
