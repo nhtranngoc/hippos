@@ -75,43 +75,11 @@ void kernel_main(void) {
     // Fetch the first framebuffer.
     struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
 
-    // Note: we assume the framebuffer model is RGB with 32-bit pixels.
-    // for (size_t i = 0; i < 100; i++) {
-    //     volatile uint32_t *fb_ptr = framebuffer->address;
-    //     fb_ptr[i * (framebuffer->pitch / 4) + i] = 0xff0000;
-    // }
-
-
     serial_initialize(SERIAL_COM1);
-    // char *test_str = "Test";
-    // serial_write(test_str, SERIAL_COM1);
-
     // Pass the framebuffer to the terminal, which will update it accordingly
     terminal_initialize(framebuffer);
-	printf(1, title_card);
-    printf(1, "This is a test to see how long a string can be before line wraps around. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\n");
-
-    volatile uint32_t *fb_ptr = framebuffer->address;
-
-    // Let's draw a box
-    int height = 30;
-    int width = 30;
-    for (int y = 0; y < height; y++) {
-        for(int x = 0; x < width; x++) {
-            // fb_ptr[x + y * 1280] = 0xff0000;
-            *(fb_ptr + x + y * 1280) = 0x00ff00;
-        }
-    }
-
-    for(int i = 0; i < 45; i++) {
-        ssfn_dst.x += ssfn_src->width * i;
-        char n[10];
-        itoa(i, n, 10);
-        printf(1, n);
-        if(i < 44) {
-            printf(1, "\n");
-        }
-    }
+	printf(PIPE_TERMINAL, title_card);
+    printf(PIPE_TERMINAL, "This is a test to see how long a string can be before line wraps around. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\n");
 
     // We're done, just hang...
     hcf();
