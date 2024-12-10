@@ -22,3 +22,12 @@ I am using this section of the README as a form of journal, admittedly not the b
 I will move this littleosbook to its own branch, and refactor the codebase to more closely resemble the OSDev wiki, starting with Barebones tutorial. This means rewriting the Makefile to use the Cross Compiler, rewriting the Assembly code, and actually understanding how the Linker works. 
 
 Currently I am merging what I already wrote with the better structured code from Meaty Bones on OSDev.
+
+# Cross Compiling
+For HippOS, I started out with a i386 architecture, following the OSDev tutorial series. However, as the project grows, as all things must, I have decided to port everything over to x86_64, while (hopefully) keep compatibility with the existing 32 bit code.
+
+Most of the changes lay in kernel/Makefile and build scripts, however these are reversible.
+
+One notable thing to check is to follow this tutorial - I have no idea why this isn't linked any where else, and is only available upon a Google search (truncated error)
+
+https://osdev.wiki/wiki/Building_libgcc_for_mcmodel%3Dkernel
