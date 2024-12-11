@@ -85,7 +85,6 @@ void kernel_main(void) {
 
     // GDT
     gdt_initialize();
-    ksuccess("Updated GDT.\n");
 
     // Serial
     serial_initialize(SERIAL_COM1);
