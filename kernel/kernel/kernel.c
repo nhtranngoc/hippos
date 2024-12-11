@@ -47,21 +47,6 @@ static void hcf(void) {
     }
 }
 
-char *title_card = 
-    "\n\
-       888      d8b                    .d88888b.   .d8888b.  \n\
-       888      Y8P                   d88P\" \"Y88b d88P  Y88b \n\
-       888                            888     888 Y88b.      \n\
-       88888b.  888 88888b.  88888b.  888     888  \"Y888b.   \n\
-       888 \"88b 888 888 \"88b 888 \"88b 888     888     \"Y88b. \n\
-       888  888 888 888  888 888  888 888     888       \"888 \n\
-       888  888 888 888 d88P 888 d88P Y88b. .d88P Y88b  d88P \n\
-       888  888 888 88888P\"  88888P\"   \"Y88888P\"   \"Y8888P\"  \n\
-                     888      888                             \n\
-                     888      888                             \n\
-                     888      888                             \n\n";
-
-
 void kernel_main(void) {
     // Ensure the bootloader actually understands our base revision (see spec).
     if (LIMINE_BASE_REVISION_SUPPORTED == false) {
@@ -78,17 +63,14 @@ void kernel_main(void) {
     struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
 
     terminal_initialize(framebuffer);
-    printf(PIPE_TERMINAL, title_card);
     // Pass the framebuffer to the terminal, which will update it accordingly
-    ksuccess("Framebuffer Initialized.\n");
-    ksuccess("Terminal Initialized.\n");
+    ksuccess("Framebuffer initialized.\n");
 
     // GDT
     gdt_initialize();
 
     // Serial
     serial_initialize(SERIAL_COM1);
-    ksuccess("Serial Port Initialized on COM 1.\n");
 
     // We're done, just hang...
     hcf();

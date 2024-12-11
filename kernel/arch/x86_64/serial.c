@@ -1,5 +1,6 @@
 #include <kernel/serial.h>
 #include <kernel/io.h>
+#include <kernel/klog.h>
 
 /** serial_configure_baud_rate:
  *  Sets the speed of the data being sent. The default speed of a serial
@@ -48,7 +49,10 @@ void serial_configure_modem(unsigned short com) {
  *  @param com      COM port
  */
 void serial_initialize(unsigned short com) {
+    klog("Initializing Serial port...\n");
+
     if (com < 1) {
+        kerror("COM Port invalid.\n");
         return;
     }
 
@@ -56,6 +60,8 @@ void serial_initialize(unsigned short com) {
     serial_configure_fifo(com);
     serial_configure_line(com);
     serial_configure_modem(com);
+
+    ksuccess("Serial port initialized.\n");
 }
 
 /** serial_is_transmit_fifo_empty

@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -7,12 +9,25 @@
 #include <kernel/tty.h>
 #include <kernel/io.h>
 #include <kernel/limine.h>
-
+#include <kernel/klog.h>
 #include <kernel/serial.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 struct limine_framebuffer *framebuffer;
+
+char *title_card = 
+    "\n\
+       888      d8b                    .d88888b.   .d8888b.  \n\
+       888      Y8P                   d88P\" \"Y88b d88P  Y88b \n\
+       888                            888     888 Y88b.      \n\
+       88888b.  888 88888b.  88888b.  888     888  \"Y888b.   \n\
+       888 \"88b 888 888 \"88b 888 \"88b 888     888     \"Y88b. \n\
+       888  888 888 888  888 888  888 888     888       \"888 \n\
+       888  888 888 888 d88P 888 d88P Y88b. .d88P Y88b  d88P \n\
+       888  888 888 88888P\"  88888P\"   \"Y88888P\"   \"Y8888P\"  \n\
+                     888      888                             \n\
+                     888      888                             \n\
+                     888      888                             \n\n";
+
 
 void terminal_initialize(struct limine_framebuffer *fb) {
     // @TODO: Implement check to see if framebuffer is ready. Exit if not
@@ -31,6 +46,9 @@ void terminal_initialize(struct limine_framebuffer *fb) {
     ssfn_dst.p = framebuffer->pitch;
     ssfn_dst.x = ssfn_dst.y = 0;                /* pen position */
     ssfn_dst.fg = 0xFFFFFF;                     /* foreground color */
+
+    printf(PIPE_TERMINAL, title_card);
+    ksuccess("Terminal initialized.\n");
 }
 
 void terminal_putentryat(uint32_t c, uint32_t color, size_t x, size_t y) {
