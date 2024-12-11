@@ -3,10 +3,10 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <kernel/ssfn.h>
 #include <kernel/tty.h>
 #include <kernel/io.h>
 #include <kernel/limine.h>
-#include <kernel/ssfn.h>
 
 #include <kernel/serial.h>
 #include <stdio.h>
