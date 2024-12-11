@@ -10,7 +10,7 @@
 
 #define SSFN_CONSOLEBITMAP_TRUECOLOR        /* use the special renderer for 32 bit truecolor packed pixels */
 #include <kernel/ssfn.h>
-
+#include <kernel/gdt.h>
 
 // Set the base revision to 3, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -109,6 +109,11 @@ void kernel_main(void) {
     printf(PIPE_TERMINAL, "Framebuffer Initialized.\n");
     print_ok();
     printf(PIPE_TERMINAL, "Terminal Initialized.\n");
+
+    // GDT
+    gdt_initialize();
+    print_ok();
+    printf(PIPE_TERMINAL, "Updated GDT.\n");
 
     serial_initialize(SERIAL_COM1);
     print_ok();
