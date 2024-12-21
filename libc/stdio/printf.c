@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #if defined(__is_libk)
@@ -79,6 +80,19 @@ int printf(uint8_t output, const char* restrict format, ...) {
 				return -1;
 			}
 			if (!print(output, str, len))
+				return -1;
+			written += len;
+		} else if (*format == 'd') {
+			format++;
+			int num = va_arg(parameters, int);
+			char buf[32];
+			itoa(num, buf, 10);
+			size_t len = strlen(buf);
+			if (maxrem < len) {
+				// TODO: Set errno to EOVERFLOW.
+				return -1;
+			}
+			if (!print(output, buf, len))
 				return -1;
 			written += len;
 		} else {
