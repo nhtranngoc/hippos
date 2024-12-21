@@ -13,6 +13,7 @@
 #include <kernel/gdt.h>
 #include <kernel/klog.h>
 #include <kernel/idt.h>
+#include <kernel/cpudet.h>
 
 // Set the base revision to 3, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -75,6 +76,16 @@ void kernel_main(void) {
 
     // IDT
     idt_initialize();
+
+    // Detect CPU
+    detect_cpu();
+
+    // Check for APIC Presence
+    if (check_apic()) {
+        ksuccess("APIC available.\n");
+    } else {
+        kerror("No APIC chip found...\n");
+    }
 
     // We're done, just hang...
     hcf();
