@@ -57,7 +57,7 @@ $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
 
 .PHONY: all clean install install-headers install-kernel limine/limine
-.SUFFIXES: .o .c .S .sfn
+.SUFFIXES: .o .c .S .sfn .asm
 
 all: hippos.kernel
 
@@ -72,6 +72,9 @@ $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
 
 .S.o:
 	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+
+.asm.o:
+	nasm -f elf64 $<
 
 %.o: %.sfn
 	$(LD) -r -b binary -o $@ $<

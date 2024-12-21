@@ -12,6 +12,7 @@
 #include <kernel/ssfn.h>
 #include <kernel/gdt.h>
 #include <kernel/klog.h>
+#include <kernel/idt.h>
 
 // Set the base revision to 3, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -71,6 +72,9 @@ void kernel_main(void) {
 
     // Serial
     serial_initialize(SERIAL_COM1);
+
+    // IDT
+    idt_initialize();
 
     // We're done, just hang...
     hcf();
