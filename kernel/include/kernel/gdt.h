@@ -58,10 +58,6 @@ typedef struct  __attribute__((packed)) {
 
 typedef struct  __attribute__((packed)) {
     gdt_entry_t null;
-    gdt_entry_t _16bit_code;
-    gdt_entry_t _16bit_data;
-    gdt_entry_t _32bit_code;
-    gdt_entry_t _32bit_data;
     gdt_entry_t _64bit_code;
     gdt_entry_t _64bit_data;
     gdt_entry_t user_data;
