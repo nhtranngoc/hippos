@@ -362,3 +362,11 @@ int do_amd(void) {
 	printf(PIPE_TERMINAL, "Stepping: %d Reserved: %d\n", stepping, reserved);
 	return 0;
 }
+
+/* Example: Check for builtin local APIC. */
+int check_apic(void)
+{
+    unsigned int eax, unused, edx;
+    cpuid(1, eax, unused, unused, edx);
+    return edx & CPUID_FEAT_EDX_APIC;
+}

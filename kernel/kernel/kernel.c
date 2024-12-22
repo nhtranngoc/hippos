@@ -80,12 +80,14 @@ void kernel_main(void) {
     // Detect CPU
     detect_cpu();
 
-    // Check for APIC Presence
+    // Check for APIC
     if (check_apic()) {
-        ksuccess("APIC available.\n");
+        ksuccess("APIC Detected.\n");
     } else {
-        kerror("No APIC chip found...\n");
+        kerror("APIC Not Detected.\n");
     }
+
+
 
     // We're done, just hang...
     hcf();
