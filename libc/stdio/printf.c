@@ -95,6 +95,18 @@ int printf(uint8_t output, const char* restrict format, ...) {
 			if (!print(output, buf, len))
 				return -1;
 			written += len;
+		} else if (*format == 'x') {
+			format++;
+			int64_t num = va_arg(parameters, int64_t);
+			char buf[32];
+			itoa(num, buf, 16);
+			size_t len = strlen(buf);
+			if (maxrem < len) {
+				// TODO: Set errno to EOVERFLOW.
+				return -1;
+			}
+			if (!print(output, buf, len))
+				return -1;
 		} else {
 			format = format_begun_at;
 			size_t len = strlen(format);

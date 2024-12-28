@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 // A utility function to reverse a string
 void reverse(char str[], int length)
@@ -16,7 +17,7 @@ void reverse(char str[], int length)
     }
 }
 
-char *itoa ( int value, char * str, int base ) {
+char *itoa ( int64_t value, char * str, int base ) {
     int i = 0;
     bool isNegative = false;
 
@@ -43,7 +44,7 @@ char *itoa ( int value, char * str, int base ) {
     if (isNegative) {
         str[i++] = '-';
     }
-
+    
     str[i] = '\0';
 
     reverse(str, i);
