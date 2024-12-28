@@ -370,3 +370,10 @@ int check_apic(void)
     cpuid(1, eax, unused, unused, edx);
     return edx & CPUID_FEAT_EDX_APIC;
 }
+
+int check_msr(void) {
+	static uint32_t eax, edx, unused;
+	cpuid(1, eax, unused, unused, edx);
+
+	return edx & CPUID_FEAT_EDX_MSR;
+}

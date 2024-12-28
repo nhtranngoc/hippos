@@ -14,6 +14,7 @@
 #include <kernel/klog.h>
 #include <kernel/idt.h>
 #include <kernel/cpudet.h>
+#include <kernel/apic.h>
 
 // Set the base revision to 3, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -80,14 +81,8 @@ void kernel_main(void) {
     // Detect CPU
     detect_cpu();
 
-    // Check for APIC
-    if (check_apic()) {
-        ksuccess("APIC Detected.\n");
-    } else {
-        kerror("APIC Not Detected.\n");
-    }
-
-
+    // APIC
+    apic_initialize();
 
     // We're done, just hang...
     hcf();

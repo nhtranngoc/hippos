@@ -1,13 +1,19 @@
 %macro isr_err_stub 1
 isr_stub_%+%1:
-    call exception_handler
-    iretq
+    ; Push a dummy error code
+    push qword 0
+    ; Push vector number
+    push qword %1
+    ; Jump to stub
+    jmp interrupt_stub
 %endmacro
-; if writing for 64-bit, use iretq instead
+
 %macro isr_no_err_stub 1
 isr_stub_%+%1:
-    call exception_handler
-    iretq
+    ; No error, so we don't need to push an error code, just the vector number
+    push qword %1
+    ; Jump to stub
+    jmp interrupt_stub
 %endmacro
 
 extern exception_handler
@@ -51,3 +57,24 @@ isr_stub_table:
     dq isr_stub_%+i ; use DQ instead if targeting 64-bit
 %assign i i+1 
 %endrep
+
+interrupt_stub:
+    push rax
+    push rbx
+    ; Push other registers here
+    push r14
+    push r15
+
+    mov rdi, rsp
+    call exception_handler
+    mov rsp, rax
+
+    pop r15
+    pop r14
+    ; Pop other registers here
+    pop rbx
+    pop rax
+
+    add rsp, 16
+
+    iret

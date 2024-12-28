@@ -21,14 +21,30 @@ typedef struct {
 	uint64_t	base;
 } __attribute__((packed)) idtr_t;
 
+typedef struct {
+	uint64_t r15;
+	uint64_t r14;
+	// Other pushed registers
+	uint64_t rbx;
+	uint64_t rax;
+
+	uint64_t vector_number;
+	uint64_t error_code;
+
+	uint64_t iret_rip;
+	uint64_t iret_cs;
+	uint64_t iret_flags;
+	uint64_t iret_rsp;
+	uint64_t iret_ss;
+} cpu_status_t;
+
 __attribute__((aligned(0x10))) 
 static idt_entry_t idt[256]; // Create an array of IDT entries; aligned for performance
-
 
 static idtr_t idtr;
 
 __attribute__((noreturn))
-void exception_handler(void);
+cpu_status_t *exception_handler(cpu_status_t *context);
 static bool vectors[IDT_MAX_DESCRIPTORS];
 void idt_set_descriptor(uint8_t vector, void* isr, uint8_t flags);
 extern void* isr_stub_table[];
