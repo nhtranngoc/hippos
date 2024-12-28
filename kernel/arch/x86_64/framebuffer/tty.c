@@ -5,14 +5,29 @@
 #include <stdint.h>
 #include <string.h>
 
-#include <kernel/ssfn.h>
+#define SSFN_CONSOLEBITMAP_TRUECOLOR        /* use the special renderer for 32 bit truecolor packed pixels */
+
+#include <kernel/utils.h>
 #include <kernel/framebuffer/tty.h>
+#include <kernel/ssfn.h>
 #include <kernel/io/io.h>
 #include <kernel/limine.h>
 #include <kernel/klog.h>
 #include <kernel/io/serial.h>
 
 struct limine_framebuffer *framebuffer;
+
+
+// The Limine requests can be placed anywhere, but it is important that
+// the compiler does not optimise them away, so, usually, they should
+// be made volatile or equivalent, _and_ they should be accessed at least
+// once or marked as used with the "used" attribute as done here.
+
+__attribute__((used, section(".limine_requests")))
+static volatile struct limine_framebuffer_request framebuffer_request = {
+    .id = LIMINE_FRAMEBUFFER_REQUEST,
+    .revision = 0
+};
 
 char *title_card = 
     "\n\
@@ -29,9 +44,15 @@ char *title_card =
                      888      888                             \n\n";
 
 
-void terminal_initialize(struct limine_framebuffer *fb) {
-    // @TODO: Implement check to see if framebuffer is ready. Exit if not
-    framebuffer = fb;
+void terminal_initialize(void) {    
+    // Ensure we got a framebuffer.
+    if (framebuffer_request.response == NULL
+     || framebuffer_request.response->framebuffer_count < 1) {
+        hcf();
+    }
+
+    // Fetch the first framebuffer.
+    struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
 
     // Name of the font symbol to use, can be found by readelf after linking u_vga16.sfn to .o
     extern ssfn_font_t _binary_arch_x86_64_u_vga16_sfn_start;

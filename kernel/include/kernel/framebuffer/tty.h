@@ -4,8 +4,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include <kernel/limine.h>
-
 // These are only specific to x32, since we have SSFN to help handling cursor position and putchar
 #if defined (__i386__)
 /* The I/O ports */
@@ -20,7 +18,7 @@ uint16_t terminal_getcursor(void);
 #endif
 
 #if defined(__x86_64__)
-void terminal_initialize(struct limine_framebuffer *framebuffer);
+void terminal_initialize(void);
 void terminal_write(const uint8_t* data, size_t size);
 void terminal_writestring(const uint8_t* data);
 void terminal_putchar(uint8_t c);
