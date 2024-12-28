@@ -2,11 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <kernel/apic.h>
-#include <kernel/cpudet.h>
+#include <kernel/cpu/apic.h>
+#include <kernel/cpu/cpudet.h>
 #include <kernel/klog.h>
-#include <kernel/io.h>
-#include <kernel/hhdm.h>
+#include <kernel/io/io.h>
+#include <kernel/mem/hhdm.h>
 
 void cpu_get_msr(uint32_t msr, uint32_t *lo, uint32_t *hi)
 {

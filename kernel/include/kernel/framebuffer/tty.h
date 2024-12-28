@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "limine.h"
+#include <kernel/limine.h>
 
 // These are only specific to x32, since we have SSFN to help handling cursor position and putchar
 #if defined (__i386__)

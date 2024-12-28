@@ -1,5 +1,5 @@
-#include <kernel/serial.h>
-#include <kernel/io.h>
+#include <kernel/io/serial.h>
+#include <kernel/io/io.h>
 #include <kernel/klog.h>
 
 /** serial_configure_baud_rate:

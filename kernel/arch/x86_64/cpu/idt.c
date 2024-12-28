@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include <kernel/idt.h>
+#include <kernel/cpu/idt.h>
 #include <kernel/klog.h>
 
 cpu_status_t *exception_handler(cpu_status_t *context) {

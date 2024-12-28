@@ -41,20 +41,20 @@ $(KERNEL_ARCH_OBJS) \
 kernel/kernel.o \
 
 OBJS=\
-$(ARCHDIR)/crti.o \
-$(ARCHDIR)/crtbegin.o \
+$(ARCHDIR)/asm/crti.o \
+$(ARCHDIR)/asm/crtbegin.o \
 $(KERNEL_OBJS) \
-$(ARCHDIR)/crtend.o \
-$(ARCHDIR)/crtn.o \
+$(ARCHDIR)/asm/crtend.o \
+$(ARCHDIR)/asm/crtn.o \
 
 LINK_LIST=\
 $(LDFLAGS) \
-$(ARCHDIR)/crti.o \
-$(ARCHDIR)/crtbegin.o \
+$(ARCHDIR)/asm/crti.o \
+$(ARCHDIR)/asm/crtbegin.o \
 $(KERNEL_OBJS) \
 $(LIBS) \
-$(ARCHDIR)/crtend.o \
-$(ARCHDIR)/crtn.o \
+$(ARCHDIR)/asm/crtend.o \
+$(ARCHDIR)/asm/crtn.o \
 
 .PHONY: all clean install install-headers install-kernel limine/limine
 .SUFFIXES: .o .c .S .sfn .asm
@@ -64,7 +64,7 @@ all: hippos.kernel
 hippos.kernel: $(OBJS) $(ARCHDIR)/linker.ld 
 	$(CC) -T $(ARCHDIR)/linker.ld -o $@ $(CFLAGS) $(LINK_LIST) 
 
-$(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
+$(ARCHDIR)/asm/crtbegin.o $(ARCHDIR)/asm/crtend.o:
 	OBJ=`$(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=$(@F)` && cp "$$OBJ" $@
 
 .c.o:

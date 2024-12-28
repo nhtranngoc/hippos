@@ -29,7 +29,7 @@
 //#include <stdio.h> /* for printf(PIPE_TERMINAL, ); */
 
 #include <stdio.h>
-#include <kernel/cpudet.h>
+#include <kernel/cpu/cpudet.h>
 
 
 /* Intel Specific brand list */

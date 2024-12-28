@@ -1,5 +1,5 @@
-#include <kernel/serial.h>
-#include <kernel/io.h>
+#include <kernel/io/serial.h>
+#include <kernel/io/io.h>
 
 /** serial_configure_baud_rate:
  *  Sets the speed of the data being sent. The default speed of a serial

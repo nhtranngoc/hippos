@@ -5,16 +5,16 @@
 #include <string.h>
 
 #include <kernel/limine.h>
-#include <kernel/tty.h>
-#include <kernel/serial.h>
+#include <kernel/framebuffer/tty.h>
+#include <kernel/io/serial.h>
 
 #define SSFN_CONSOLEBITMAP_TRUECOLOR        /* use the special renderer for 32 bit truecolor packed pixels */
 #include <kernel/ssfn.h>
-#include <kernel/gdt.h>
+#include <kernel/cpu/gdt.h>
 #include <kernel/klog.h>
-#include <kernel/idt.h>
-#include <kernel/cpudet.h>
-#include <kernel/apic.h>
+#include <kernel/cpu/idt.h>
+#include <kernel/cpu/cpudet.h>
+#include <kernel/cpu/apic.h>
 
 // Set the base revision to 3, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -82,7 +82,8 @@ void kernel_main(void) {
     detect_cpu();
 
     // APIC
-    apic_initialize();
+    // WIP - Need to configure paging (I think.)
+    // apic_initialize();
 
     // We're done, just hang...
     hcf();

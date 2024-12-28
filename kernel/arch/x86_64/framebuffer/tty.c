@@ -6,11 +6,11 @@
 #include <string.h>
 
 #include <kernel/ssfn.h>
-#include <kernel/tty.h>
-#include <kernel/io.h>
+#include <kernel/framebuffer/tty.h>
+#include <kernel/io/io.h>
 #include <kernel/limine.h>
 #include <kernel/klog.h>
-#include <kernel/serial.h>
+#include <kernel/io/serial.h>
 
 struct limine_framebuffer *framebuffer;
 

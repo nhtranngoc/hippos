@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdint.h>
 #if defined(__is_libk)
-#include <kernel/serial.h>
+#include <kernel/io/serial.h>
 #endif
 
 #define SERIAL 0

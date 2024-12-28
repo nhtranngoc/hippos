@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include <kernel/gdt.h>
+#include <kernel/cpu/gdt.h>
 #include <kernel/klog.h>
 
 // Adapted from https://github.com/kora-org/ydin/blob/rewrite-old/src/kernel/cpu/gdt.c . Will need to check up on code.
