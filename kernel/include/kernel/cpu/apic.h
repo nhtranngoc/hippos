@@ -20,6 +20,16 @@
 #define IA32_APIC_BASE_MSR_BSP 0x100 // Processor is a BSP
 #define IA32_APIC_BASE_MSR_ENABLE 0x800
 
+// LAPIC
+#define LAPIC_EOI           0x0B0
+#define LAPIC_LDR           0x0D0
+#define LAPIC_DFR           0x0E0
+#define LAPIC_SPURIOUS      0x0F0
+#define LAPIC_ESR           0x280
+#define LAPIC_ICRL          0x300
+#define LAPIC_ICRH          0x310
+#define LAPIC_SW_ENABLE     0x100
+
 void apic_initialize(void);
 
 #endif // KERNEL_APIC_H

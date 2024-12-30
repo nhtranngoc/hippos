@@ -13,6 +13,7 @@
 #include <kernel/cpu/idt.h>
 #include <kernel/cpu/cpudet.h>
 #include <kernel/cpu/apic.h>
+#include <kernel/mem/hhdm.h>
 
 // Set the base revision to 3, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -50,6 +51,9 @@ void kernel_main(void) {
 
     // Detect CPU
     detect_cpu();
+
+    // Get HHDM from Limine
+    hhdm_initialize();
 
     // APIC
     // WIP - Need to configure paging (I think.)

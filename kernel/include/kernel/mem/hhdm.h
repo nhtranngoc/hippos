@@ -2,14 +2,10 @@
 #define KERNEL_HHDM_H
 
 #include <stdint.h>
-#include <kernel/limine.h>
 
-struct limine_hhdm_response *hhdm_response;
+#define HHDM(logical_address)               logical_address + 0xffffffff80000000
 
-__attribute__((used, section(".limine_requests")))
-static volatile struct limine_hhdm_request hhdm_request = {
-    .id = LIMINE_HHDM_REQUEST,
-    .revision = 0,
-};
+extern uint64_t g_hhdm_offset;
+void hhdm_initialize(void);
 
 #endif // KERNEL_HHDM_H
