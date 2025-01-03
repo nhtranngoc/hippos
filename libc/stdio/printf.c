@@ -107,6 +107,18 @@ int printf(uint8_t output, const char* restrict format, ...) {
 			}
 			if (!print(output, buf, len))
 				return -1;
+		} else if (*format == 'p') {
+			format++;
+			const void *ptr = va_arg(parameters, void *);
+			uintptr_t uptr = (uintptr_t) ptr;
+			char buf[32];
+			itoa(uptr, buf, 16);
+			size_t len = strlen(buf);
+			if (maxrem < len) {
+				return -1;
+			}
+			if (!print(output, buf, len))
+				return -1;
 		} else {
 			format = format_begun_at;
 			size_t len = strlen(format);

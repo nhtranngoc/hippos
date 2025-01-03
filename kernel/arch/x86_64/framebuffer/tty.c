@@ -15,9 +15,6 @@
 #include <kernel/klog.h>
 #include <kernel/io/serial.h>
 
-struct limine_framebuffer *framebuffer;
-
-
 // The Limine requests can be placed anywhere, but it is important that
 // the compiler does not optimise them away, so, usually, they should
 // be made volatile or equivalent, _and_ they should be accessed at least
@@ -87,23 +84,31 @@ void terminal_putentryat(uint32_t c, uint32_t color, size_t x, size_t y) {
 */
 void terminal_scroll(void) {
     // We want to copy the frame from line 1 -> line end, and up by 1 line
+
+    // Somehow the framebuffer is changed, so we are making local copies from requests instead of using a global variable.
+    // Otherwise, this would crash.
+    struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
+
     int src_x = 0;
     int src_y = ssfn_src->height;
     int dst_x = 0;
     int dst_y = 0;
-    uint32_t* src_ptr = framebuffer->address + (src_y * (framebuffer->pitch / 4) + src_x) * sizeof(uint32_t);
-    uint32_t* dst_ptr = framebuffer->address + (dst_y * (framebuffer->pitch / 4) + dst_x) * sizeof(uint32_t);
+
+    volatile uint32_t* src_ptr = framebuffer->address + (src_y * (framebuffer->pitch / 4) + src_x) * sizeof(uint32_t);
+    volatile uint32_t* dst_ptr = framebuffer->address + (dst_y * (framebuffer->pitch / 4) + dst_x) * sizeof(uint32_t);
 
     // Calculate the total number of bytes to move (width * height pixels)
     size_t total_size = framebuffer->width * (framebuffer->height - ssfn_src->height) * sizeof(uint32_t);
+    // This line causes a crash. Reason? 
     memmove(dst_ptr, src_ptr, total_size);
 
-    // // Clear last line
+    // Clear last line
     ssfn_dst.y = ssfn_dst.h - (1 * ssfn_src->height);
     ssfn_dst.x = 0;
     for (int y = framebuffer->height - ssfn_src->height; y < framebuffer->height; y++) {
         for (int x = 0; x < framebuffer->width; x++) {
             volatile uint32_t *fb_ptr = framebuffer->address;
+            // This line also causes a crash too.
             fb_ptr[x + y * framebuffer->width] = 0x000000;
         }
     }
