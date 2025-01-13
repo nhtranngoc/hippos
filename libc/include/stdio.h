@@ -4,6 +4,8 @@
 #include <sys/cdefs.h>
 #include <stdint.h>
 
+#include "printf.h"
+
 #define EOF (-1)
 
 #ifdef __cplusplus
@@ -15,7 +17,6 @@ enum OUTPUT_PIPES {
     PIPE_TERMINAL = 1
 };
 
-int printf(uint8_t output, const char* __restrict, ...);
 int putchar(int);
 int puts(const char*);
 

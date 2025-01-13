@@ -65,7 +65,7 @@ void terminal_initialize(void) {
     ssfn_dst.x = ssfn_dst.y = 0;                /* pen position */
     ssfn_dst.fg = 0xFFFFFF;                     /* foreground color */
 
-    printf(PIPE_TERMINAL, title_card);
+    printf(title_card);
     ksuccess("Terminal initialized.\n");
 }
 

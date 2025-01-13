@@ -6,40 +6,40 @@
 // In the future, we want to:
 // 1) Decouple printf function to only one output and return it to standard UNIX compat (without the pipe argument)
 void print_success(void) {
-    printf(PIPE_TERMINAL, "[");
+    printf("[");
     ssfn_dst.fg = 0x00ff00;
-    printf(PIPE_TERMINAL, " OK ");
+    printf(" OK ");
     ssfn_dst.fg = 0xffffff;
-    printf(PIPE_TERMINAL, "] ");
+    printf("] ");
 }
 
 void print_debug(void) {
-    printf(PIPE_TERMINAL, "[");
+    printf("[");
     ssfn_dst.fg = 0xffffff;
-    printf(PIPE_TERMINAL, " DEBUG ");
+    printf(" DEBUG ");
     ssfn_dst.fg = 0xffffff;
-    printf(PIPE_TERMINAL, "] ");
+    printf("] ");
 }
 
 void print_error(void) {
-    printf(PIPE_TERMINAL, "[");
+    printf("[");
     ssfn_dst.fg = 0xff0000;
-    printf(PIPE_TERMINAL, " ERROR ");
+    printf(" ERROR ");
     ssfn_dst.fg = 0xffffff;
-    printf(PIPE_TERMINAL, "] ");
+    printf("] ");
 }
 
 void klog(char * format) {
     print_debug();
-    printf(PIPE_TERMINAL, format);
+    printf(format);
 }
 
 void kerror(char * format) {
     print_error();
-    printf(PIPE_TERMINAL, format);
+    printf(format);
 }
 
 void ksuccess(char * format) {
     print_success();
-    printf(PIPE_TERMINAL, format);
+    printf(format);
 }

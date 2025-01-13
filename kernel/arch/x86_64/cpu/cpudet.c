@@ -26,7 +26,7 @@
  */
 
 /* You need to include a file with fairly(ish) compliant printf PIPE_TERMINAL, prototype, Decimal and String support like %s and %d and this is truely all you need! */
-//#include <stdio.h> /* for printf(PIPE_TERMINAL, ); */
+//#include <stdio.h> /* for printf(); */
 
 #include <stdio.h>
 #include <kernel/cpu/cpudet.h>
@@ -100,7 +100,7 @@ int detect_cpu(void) { /* or main() if your trying to port this as an independan
 		do_amd();
 		break;
 		default:
-		printf(PIPE_TERMINAL, "Unknown x86 CPU Detected\n");
+		printf("Unknown x86 CPU Detected\n");
 		break;
 	}
 	return 0;
@@ -108,7 +108,7 @@ int detect_cpu(void) { /* or main() if your trying to port this as an independan
 
 /* Intel-specific information */
 int do_intel(void) {
-	printf(PIPE_TERMINAL, "Intel Specific Features:\n");
+	printf("Intel Specific Features:\n");
 	unsigned long eax, ebx, ecx, edx, max_eax, signature, unused;
 	int model, family, type, brand, stepping, reserved;
 	int extended_family = -1;
@@ -120,45 +120,45 @@ int do_intel(void) {
 	stepping = eax & 0xf;
 	reserved = eax >> 14;
 	signature = eax;
-	printf(PIPE_TERMINAL, "Type %d - ", type);
+	printf("Type %d - ", type);
 	switch(type) {
 		case 0:
-		printf(PIPE_TERMINAL, "Original OEM");
+		printf("Original OEM");
 		break;
 		case 1:
-		printf(PIPE_TERMINAL, "Overdrive");
+		printf("Overdrive");
 		break;
 		case 2:
-		printf(PIPE_TERMINAL, "Dual-capable");
+		printf("Dual-capable");
 		break;
 		case 3:
-		printf(PIPE_TERMINAL, "Reserved");
+		printf("Reserved");
 		break;
 	}
-	printf(PIPE_TERMINAL, "\n");
-	printf(PIPE_TERMINAL, "Family %d - ", family);
+	printf("\n");
+	printf("Family %d - ", family);
 	switch(family) {
 		case 3:
-		printf(PIPE_TERMINAL, "i386");
+		printf("i386");
 		break;
 		case 4:
-		printf(PIPE_TERMINAL, "i486");
+		printf("i486");
 		break;
 		case 5:
-		printf(PIPE_TERMINAL, "Pentium");
+		printf("Pentium");
 		break;
 		case 6:
-		printf(PIPE_TERMINAL, "Pentium Pro");
+		printf("Pentium Pro");
 		break;
 		case 15:
-		printf(PIPE_TERMINAL, "Pentium 4");
+		printf("Pentium 4");
 	}
-	printf(PIPE_TERMINAL, "\n");
+	printf("\n");
 	if(family == 15) {
 		extended_family = (eax >> 20) & 0xff;
-		printf(PIPE_TERMINAL, "Extended family %d\n", extended_family);
+		printf("Extended family %d\n", extended_family);
 	}
-	printf(PIPE_TERMINAL, "Model %d - ", model);
+	printf("Model %d - ", model);
 	switch(family) {
 		case 3:
 		break;
@@ -166,70 +166,70 @@ int do_intel(void) {
 		switch(model) {
 			case 0:
 			case 1:
-			printf(PIPE_TERMINAL, "DX");
+			printf("DX");
 			break;
 			case 2:
-			printf(PIPE_TERMINAL, "SX");
+			printf("SX");
 			break;
 			case 3:
-			printf(PIPE_TERMINAL, "487/DX2");
+			printf("487/DX2");
 			break;
 			case 4:
-			printf(PIPE_TERMINAL, "SL");
+			printf("SL");
 			break;
 			case 5:
-			printf(PIPE_TERMINAL, "SX2");
+			printf("SX2");
 			break;
 			case 7:
-			printf(PIPE_TERMINAL, "Write-back enhanced DX2");
+			printf("Write-back enhanced DX2");
 			break;
 			case 8:
-			printf(PIPE_TERMINAL, "DX4");
+			printf("DX4");
 			break;
 		}
 		break;
 		case 5:
 		switch(model) {
 			case 1:
-			printf(PIPE_TERMINAL, "60/66");
+			printf("60/66");
 			break;
 			case 2:
-			printf(PIPE_TERMINAL, "75-200");
+			printf("75-200");
 			break;
 			case 3:
-			printf(PIPE_TERMINAL, "for 486 system");
+			printf("for 486 system");
 			break;
 			case 4:
-			printf(PIPE_TERMINAL, "MMX");
+			printf("MMX");
 			break;
 		}
 		break;
 		case 6:
 		switch(model) {
 			case 1:
-			printf(PIPE_TERMINAL, "Pentium Pro");
+			printf("Pentium Pro");
 			break;
 			case 3:
-			printf(PIPE_TERMINAL, "Pentium II Model 3");
+			printf("Pentium II Model 3");
 			break;
 			case 5:
-			printf(PIPE_TERMINAL, "Pentium II Model 5/Xeon/Celeron");
+			printf("Pentium II Model 5/Xeon/Celeron");
 			break;
 			case 6:
-			printf(PIPE_TERMINAL, "Celeron");
+			printf("Celeron");
 			break;
 			case 7:
-			printf(PIPE_TERMINAL, "Pentium III/Pentium III Xeon - external L2 cache");
+			printf("Pentium III/Pentium III Xeon - external L2 cache");
 			break;
 			case 8:
-			printf(PIPE_TERMINAL, "Pentium III/Pentium III Xeon - internal L2 cache");
+			printf("Pentium III/Pentium III Xeon - internal L2 cache");
 			break;
 		}
 		break;
 		case 15:
 		break;
 	}
-	printf(PIPE_TERMINAL, "\n");
+	printf("\n");
 	cpuid(0x80000000, max_eax, unused, unused, unused);
 	/* Quok said: If the max extended eax value is high enough to support the processor brand string
 	(values 0x80000002 to 0x80000004), then we'll use that information to return the brand information. 
@@ -237,7 +237,7 @@ int do_intel(void) {
 	According to the Sept. 2006 Intel Arch Software Developer's Guide, if extended eax values are supported, 
 	then all 3 values for the processor brand string are supported, but we'll test just to make sure and be safe. */
 	if(max_eax >= 0x80000004) {
-		printf(PIPE_TERMINAL, "Brand: ");
+		printf("Brand: ");
 		if(max_eax >= 0x80000002) {
 			cpuid(0x80000002, eax, ebx, ecx, edx);
 			printregs(eax, ebx, ecx, edx);
@@ -250,20 +250,20 @@ int do_intel(void) {
 			cpuid(0x80000004, eax, ebx, ecx, edx);
 			printregs(eax, ebx, ecx, edx);
 		}
-		printf(PIPE_TERMINAL, "\n");
+		printf("\n");
 	} else if(brand > 0) {
-		printf(PIPE_TERMINAL, "Brand %d - ", brand);
+		printf("Brand %d - ", brand);
 		if(brand < 0x18) {
 			if(signature == 0x000006B1 || signature == 0x00000F13) {
-				printf(PIPE_TERMINAL, "%s\n", Intel_Other[brand]);
+				printf("%s\n", Intel_Other[brand]);
 			} else {
-				printf(PIPE_TERMINAL, "%s\n", Intel[brand]);
+				printf("%s\n", Intel[brand]);
 			}
 		} else {
-			printf(PIPE_TERMINAL, "Reserved\n");
+			printf("Reserved\n");
 		}
 	}
-	printf(PIPE_TERMINAL, "Stepping: %d Reserved: %d\n", stepping, reserved);
+	printf("Stepping: %d Reserved: %d\n", stepping, reserved);
 	return 0;
 }
 
@@ -278,12 +278,12 @@ void printregs(int eax, int ebx, int ecx, int edx) {
 		string[j + 8] = ecx >> (8 * j);
 		string[j + 12] = edx >> (8 * j);
 	}
-	printf(PIPE_TERMINAL, "%s", string);
+	printf("%s", string);
 }
 
 /* AMD-specific information */
 int do_amd(void) {
-	printf(PIPE_TERMINAL, "AMD Specific Features:\n");
+	printf("AMD Specific Features:\n");
 	unsigned long extended, eax, ebx, ecx, edx, unused;
 	int family, model, stepping, reserved;
 	cpuid(1, eax, unused, unused, unused);
@@ -291,10 +291,10 @@ int do_amd(void) {
 	family = (eax >> 8) & 0xf;
 	stepping = eax & 0xf;
 	reserved = eax >> 12;
-	printf(PIPE_TERMINAL, "Family: %d Model: %d [", family, model);
+	printf("Family: %d Model: %d [", family, model);
 	switch(family) {
 		case 4:
-		printf(PIPE_TERMINAL, "486 Model %d", model);
+		printf("486 Model %d", model);
 		break;
 		case 5:
 		switch(model) {
@@ -304,16 +304,16 @@ int do_amd(void) {
 			case 3:
 			case 6:
 			case 7:
-			printf(PIPE_TERMINAL, "K6 Model %d", model);
+			printf("K6 Model %d", model);
 			break;
 			case 8:
-			printf(PIPE_TERMINAL, "K6-2 Model 8");
+			printf("K6-2 Model 8");
 			break;
 			case 9:
-			printf(PIPE_TERMINAL, "K6-III Model 9");
+			printf("K6-III Model 9");
 			break;
 			default:
-			printf(PIPE_TERMINAL, "K5/K6 Model %d", model);
+			printf("K5/K6 Model %d", model);
 			break;
 		}
 		break;
@@ -322,44 +322,44 @@ int do_amd(void) {
 			case 1:
 			case 2:
 			case 4:
-			printf(PIPE_TERMINAL, "Athlon Model %d", model);
+			printf("Athlon Model %d", model);
 			break;
 			case 3:
-			printf(PIPE_TERMINAL, "Duron Model 3");
+			printf("Duron Model 3");
 			break;
 			case 6:
-			printf(PIPE_TERMINAL, "Athlon MP/Mobile Athlon Model 6");
+			printf("Athlon MP/Mobile Athlon Model 6");
 			break;
 			case 7:
-			printf(PIPE_TERMINAL, "Mobile Duron Model 7");
+			printf("Mobile Duron Model 7");
 			break;
 			default:
-			printf(PIPE_TERMINAL, "Duron/Athlon Model %d", model);
+			printf("Duron/Athlon Model %d", model);
 			break;
 		}
 		break;
 	}
-	printf(PIPE_TERMINAL, "]\n");
+	printf("]\n");
 	cpuid(0x80000000, extended, unused, unused, unused);
 	if(extended == 0) {
 		return 0;
 	}
 	if(extended >= 0x80000002) {
 		unsigned int j;
-		printf(PIPE_TERMINAL, "Detected Processor Name: ");
+		printf("Detected Processor Name: ");
 		for(j = 0x80000002; j <= 0x80000004; j++) {
 			cpuid(j, eax, ebx, ecx, edx);
 			printregs(eax, ebx, ecx, edx);
 		}
-		printf(PIPE_TERMINAL, "\n");
+		printf("\n");
 	}
 	if(extended >= 0x80000007) {
 		cpuid(0x80000007, unused, unused, unused, edx);
 		if(edx & 1) {
-			printf(PIPE_TERMINAL, "Temperature Sensing Diode Detected!\n");
+			printf("Temperature Sensing Diode Detected!\n");
 		}
 	}
-	printf(PIPE_TERMINAL, "Stepping: %d Reserved: %d\n", stepping, reserved);
+	printf("Stepping: %d Reserved: %d\n", stepping, reserved);
 	return 0;
 }
 

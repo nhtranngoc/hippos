@@ -8,6 +8,7 @@
 #include <kernel/klog.h>
 #include <kernel/mem/hhdm.h>
 #include <kernel/utils.h>
+#include <kernel/ssfn.h>
 
 // Let's request Memmap from limine and poke around a bit.
 
@@ -31,7 +32,7 @@ void pmm_initialize(void) {
     }  
   
     g_num_of_pages = g_total_memory / PAGE_SIZE;
-    printf(PIPE_TERMINAL, "Total usable memory: %d bytes, or %d pages available\n", g_total_memory, g_num_of_pages);
+    printf("Total usable memory: %d bytes, or %d pages available\n", g_total_memory, g_num_of_pages);
 
     // Now that we know how many pages we have, let's find a place in memory to put our page directory/bitmap in
     // Size of bitmap = g_num_of_pages / BITS_PER_ROW; 1 page = 1 bit?
@@ -59,18 +60,19 @@ void pmm_initialize(void) {
         hcf();
     }
 
-    printf(PIPE_TERMINAL, "Bitmap created with size %d\n", bitmap_size);
+    printf("Bitmap created with size %d\n", bitmap_size);
 
-    printf(PIPE_TERMINAL, "Found a free page at 0x%x\n", allocate_page());
+    printf("Found a free page at 0x%x\n", allocate_page());
 }
 
 void print_memmap(struct limine_memmap_entry **entries, uint64_t entry_count) {
-    printf(PIPE_TERMINAL, "Memory: Found %d memory entries from Limine.\n", entry_count);
+    printf("Memory: Found %d memory entries from Limine.\n", entry_count);
     for (uint8_t i = 0; i < entry_count; i++) {
         uint64_t type = entries[i]->type;
         char *type_buf ="";
         switch(type){
             case LIMINE_MEMMAP_USABLE:
+            ssfn_dst.fg = 0x00ff00;
             type_buf = "USABLE";
             break;
             case LIMINE_MEMMAP_RESERVED:
@@ -95,7 +97,8 @@ void print_memmap(struct limine_memmap_entry **entries, uint64_t entry_count) {
             type_buf = "FRAMEBUFFER";
             break;
         }
-        printf(PIPE_TERMINAL, "[*] Base 0x%x, length 0x%x, %s.\n", entries[i]->base, entries[i]->length, type_buf);
+        printf("[*] Base 0x%08x | Length 0x%08x | %s.\n", entries[i]->base, entries[i]->length, type_buf);
+        ssfn_dst.fg = 0xffffff;
     }
 }
 

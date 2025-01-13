@@ -110,9 +110,9 @@ void apic_initialize(void) {
     // Hardware enable local APIC
     apic_base = cpu_get_apic_base();
     cpu_set_apic_base(apic_base);
-    printf(PIPE_TERMINAL, "APIC Base address: %x\n", apic_base - g_hhdm_offset);
+    printf("APIC Base address: %x\n", apic_base - g_hhdm_offset);
 
-    printf(PIPE_TERMINAL, "Higher half offset at: %x\n", g_hhdm_offset);
+    printf("Higher half offset at: %x\n", g_hhdm_offset);
 
     #define APIC_BASE_PA 0xFEE00000
     // uintptr_t apic_base_test = APIC_BASE_PA;
@@ -122,11 +122,11 @@ void apic_initialize(void) {
 
 
     /* Set the Spurious Interrupt Vector Register bit 8 to start receiving interrupts */
-    // printf(PIPE_TERMINAL, "Spurious Interrupt Vector Register with value %x\n", apic_reg);
+    // printf("Spurious Interrupt Vector Register with value %x\n", apic_reg);
    // mmio_write32(0x00F0, mmio_read32(0x00F0) | 0x100);
 
    // uint32_t sivr = mmio_read32(0x00000F0);
-   // printf(PIPE_TERMINAL, "Spurious Interrupt Vector Register at (dec): %d \n", sivr);
+   // printf("Spurious Interrupt Vector Register at (dec): %d \n", sivr);
 
     // Test by printing out LAPIC ID
 }
