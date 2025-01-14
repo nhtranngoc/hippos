@@ -137,7 +137,7 @@ void terminal_putchar(uint8_t c) {
         }
 	}
 
-	if(ssfn_dst.y == ssfn_dst.h) {
+	if(ssfn_dst.y >= ssfn_dst.h) {
 		terminal_scroll();
 	}	
 }
