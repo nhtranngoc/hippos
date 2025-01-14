@@ -14,13 +14,11 @@
 #define FREE 0x00
 #define USED 0xff
 
-static uint64_t g_total_memory = 0;
-static uint64_t g_allocation_index = 0;
-
 struct pmm_bitmap_t {
     uint64_t *map;
     size_t size;
-    size_t page_count;
+    size_t total_pages;
+    size_t used_pages;
     size_t highest_address;
     size_t lowest_address;
 };
