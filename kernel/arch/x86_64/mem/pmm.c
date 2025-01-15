@@ -95,17 +95,15 @@ void pmm_initialize(void) {
     // Reserve page 0 for null pointer
     bitmap_use(&pmm_bitmap, 0);
 
-    printf("Bitmap created with size %d. Used %d/%d pages.\n", pmm_bitmap.size, pmm_bitmap.used_pages, pmm_bitmap.total_pages);
-    printf("==========\n");
+    printf("Bitmap created with size %d. Used %d/%d pages\n", pmm_bitmap.size, pmm_bitmap.used_pages, pmm_bitmap.total_pages);
+    printf("==========\n\n");
 
     // Test physical frame allocator by allocating the first page, then freeing it
-    pmm_memdump_rows(0, 5);
-    void *page = kalloc(76);
-    pmm_memdump_rows(0, 5);
-    kfree(page, 76);
-    pmm_memdump_rows(0, 5);
-    // kfree(page2, 65);
-    // pmm_memdump_rows(0, 2);
+    // pmm_memdump_rows(0, 5);
+    // void *page = kalloc(76);
+    // pmm_memdump_rows(0, 5);
+    // kfree(page, 76);
+    // pmm_memdump_rows(0, 5);
 }
 
 void print_memmap(struct limine_memmap_entry **entries, uint64_t entry_count) {

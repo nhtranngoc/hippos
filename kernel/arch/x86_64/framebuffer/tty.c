@@ -7,6 +7,7 @@
 
 #define SSFN_CONSOLEBITMAP_TRUECOLOR        /* use the special renderer for 32 bit truecolor packed pixels */
 
+#include <colors/colors.h>
 #include <kernel/utils.h>
 #include <kernel/framebuffer/tty.h>
 #include <kernel/ssfn.h>
@@ -51,6 +52,8 @@ void terminal_initialize(void) {
     // Fetch the first framebuffer.
     struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
 
+    
+
     // Name of the font symbol to use, can be found by readelf after linking u_vga16.sfn to .o
     extern ssfn_font_t _binary_arch_x86_64_u_vga16_sfn_start;
 
@@ -63,7 +66,15 @@ void terminal_initialize(void) {
     ssfn_dst.h = framebuffer->height;                           /* height */
     ssfn_dst.p = framebuffer->pitch;
     ssfn_dst.x = ssfn_dst.y = 0;                /* pen position */
-    ssfn_dst.fg = 0xFFFFFF;                     /* foreground color */
+    ssfn_dst.fg = COLORS_TEXT_FG;                     /* foreground color */
+
+    for (int y = 0; y < framebuffer->height; y++) {
+        for (int x = 0; x < framebuffer->width; x++) {
+            volatile uint32_t *fb_ptr = framebuffer->address;
+            // This line also causes a crash too.
+            fb_ptr[x + y * framebuffer->width] = COLORS_BG;
+        }
+    }
 
     printf(title_card);
     ksuccess("Terminal initialized.\n");
@@ -109,7 +120,7 @@ void terminal_scroll(void) {
         for (int x = 0; x < framebuffer->width; x++) {
             volatile uint32_t *fb_ptr = framebuffer->address;
             // This line also causes a crash too.
-            fb_ptr[x + y * framebuffer->width] = 0x000000;
+            fb_ptr[x + y * framebuffer->width] = COLORS_BG;
         }
     }
 
