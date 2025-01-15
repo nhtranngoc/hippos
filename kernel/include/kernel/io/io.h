@@ -65,7 +65,7 @@ static inline void mmio_write64(void *p, uint64_t data) {
     *(volatile uint64_t *)(p) = data; 
 }
 
-static inline uint64_t mmio_read64(void *p) {
+static inline uint64_t mmio_read64(size_t p) {
     return *(volatile uint64_t *)(p);
 }
 

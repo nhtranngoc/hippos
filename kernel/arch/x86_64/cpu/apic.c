@@ -8,6 +8,8 @@
 #include <kernel/io/io.h>
 #include <kernel/mem/hhdm.h>
 
+uint64_t apic_base;
+
 void cpu_get_msr(uint32_t msr, uint32_t *lo, uint32_t *hi)
 {
    asm volatile("rdmsr" : "=a"(*lo), "=d"(*hi) : "c"(msr));
@@ -46,19 +48,28 @@ void cpu_set_apic_base(uintptr_t apic) {
  * make sure you map it to virtual memory ;)
  */
 uintptr_t cpu_get_apic_base() {
-   uint32_t eax, edx;
-   cpu_get_msr(IA32_APIC_BASE_MSR, &eax, &edx);
-   return (eax & 0xfffff000);
+    uint32_t eax, edx;
+    cpu_get_msr(IA32_APIC_BASE_MSR, &eax, &edx);
+
+    #ifdef __PHYSICAL_MEMORY_EXTENSION__
+        return (eax & 0xfffff000) | ((edx & 0x0f) << 32);
+    #else
+        return (eax & 0xfffff000);
+    #endif
 }
 
 #define BASE_MASK 0xFFFFFFFFFF000
 
-static inline void lapic_write(uint32_t reg, uint32_t data) {
-    *(volatile uint32_t *) ((x86_64_msr_read(IA32_APIC_BASE_MSR) & BASE_MASK) + reg) = data;
+static inline uint32_t lapic_read(uint32_t offset)
+{
+    volatile uint32_t *pAddr = (uint32_t*)(g_hhdm_offset + apic_base + offset);
+    return *pAddr;
 }
 
-static inline uint32_t lapic_read(uint32_t reg) {
-    return *(volatile uint32_t *) (x86_64_msr_read(IA32_APIC_BASE_MSR) & BASE_MASK + reg);
+static inline void lapic_write(uint32_t offset, uint32_t val)
+{
+    volatile uint32_t *pAddr = (uint32_t*)(g_hhdm_offset + apic_base + offset);
+    *pAddr = val;
 }
 
 void apic_initialize(void) {
@@ -97,20 +108,25 @@ void apic_initialize(void) {
  
     // Enable LAPIC
     // Hardware enable local APIC
-    uint64_t apic_base = cpu_get_apic_base();
+    apic_base = cpu_get_apic_base();
     cpu_set_apic_base(apic_base);
-    printf(PIPE_TERMINAL, "APIC Base address: %x\n", apic_base);
+    printf("APIC Base address: %x\n", apic_base - g_hhdm_offset);
 
-    printf(PIPE_TERMINAL, "Higher half offset at: %x\n", (uint64_t) hhdm_request.response->offset);
-    
+    printf("Higher half offset at: %x\n", g_hhdm_offset);
+
+    #define APIC_BASE_PA 0xFEE00000
+    // uintptr_t apic_base_test = APIC_BASE_PA;
+    uintptr_t addr = (uintptr_t) (g_hhdm_offset + apic_base + 0x0F0);
+    volatile uint32_t *apic = (uint32_t *) addr;
+    *apic = 0xFF;
+
+
     /* Set the Spurious Interrupt Vector Register bit 8 to start receiving interrupts */
-    // uint32_t sivr = lapic_read(0xf0);
-    uint32_t sivr = *((volatile uint32_t*)(apic_base + 0xf0));
-    printf(PIPE_TERMINAL, "Spurious Interrupt Vector Register at %x\n", sivr);
+    // printf("Spurious Interrupt Vector Register with value %x\n", apic_reg);
    // mmio_write32(0x00F0, mmio_read32(0x00F0) | 0x100);
 
    // uint32_t sivr = mmio_read32(0x00000F0);
-   // printf(PIPE_TERMINAL, "Spurious Interrupt Vector Register at (dec): %d \n", sivr);
+   // printf("Spurious Interrupt Vector Register at (dec): %d \n", sivr);
 
     // Test by printing out LAPIC ID
 }
