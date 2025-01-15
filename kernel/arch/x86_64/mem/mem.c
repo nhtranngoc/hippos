@@ -4,7 +4,7 @@
 
 #include <kernel/mem/mem.h>
 #include <kernel/mem/pmm.h>
-#include <kernel/klog.h>
+#include <kernel/log/ulog.h>
 
 void mem_initialize(void) {
     pmm_initialize();

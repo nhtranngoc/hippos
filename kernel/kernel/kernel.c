@@ -6,7 +6,8 @@
 
 #include <kernel/limine.h>
 #include <kernel/utils.h>
-#include <kernel/klog.h>
+#include <kernel/log/ulog.h>
+#include <kernel/log/klog.h>
 #include <kernel/framebuffer/tty.h>
 #include <kernel/io/serial.h>
 #include <kernel/cpu/gdt.h>
@@ -38,20 +39,24 @@ void kernel_main(void) {
         hcf();
     }
 
+    // Serial
+    serial_initialize(SERIAL_COM1);
+
     // Terminal/framebuffer
     terminal_initialize();
+
+    // Logging functions
+    log_initialize();
+
+    // Detect CPU
+    detect_cpu();
 
     // GDT
     gdt_initialize();
 
-    // Serial
-    serial_initialize(SERIAL_COM1);
-
     // IDT
     idt_initialize();
 
-    // Detect CPU
-    detect_cpu();
 
     // Get HHDM from Limine
     hhdm_initialize();

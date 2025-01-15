@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <kernel/cpu/gdt.h>
-#include <kernel/klog.h>
+#include <kernel/log/ulog.h>
 
 // Adapted from https://github.com/kora-org/ydin/blob/rewrite-old/src/kernel/cpu/gdt.c . Will need to check up on code.
 
@@ -20,11 +20,11 @@ gdt_t gdt = {
 gdt_pointer_t gdt_pointer;
 
 void gdt_initialize(void) {
-    klog("Initializing GDT...\n");
+    ULOG_INFO("Initializing GDT...");
 
     gdt_pointer.size = sizeof(gdt_t) - 1;
     gdt_pointer.offset = (uint64_t)&gdt;
 
     gdt_flush(&gdt_pointer);
-    ksuccess("GDT initialized!\n");
+    ULOG_INFO("GDT initialized!");
 }

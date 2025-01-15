@@ -7,5 +7,5 @@ if [ "$1" = "debug" ];
 then
     qemu-system-$(./target-triplet-to-arch.sh $HOST) -serial stdio -m 2G -S -s -cdrom hippos.iso
 else
-    qemu-system-$(./target-triplet-to-arch.sh $HOST) -serial stdio -d int -m 2G -cdrom hippos.iso
+    qemu-system-$(./target-triplet-to-arch.sh $HOST) -serial stdio -m 2G -cdrom hippos.iso
 fi

@@ -1,7 +1,7 @@
 #ifndef _KERNEL_SERIAL_H
 #define _KERNEL_SERIAL_H
 
-#include <kernel/io/io.h>
+#include <stdbool.h>
 
 /* All I/O ports are calculated relative to the data port. This is because
 * all serial ports (COM1, COM2, COM3, COM4) have their ports in the same
@@ -67,5 +67,6 @@ void serial_configure_modem(unsigned short com);
 void serial_initialize(unsigned short com);
 int serial_is_transmit_fifo_empty(unsigned short com);
 void serial_write(char *buf, unsigned short com);
+bool is_serial_initialized(void);
 
 #endif // _KERNEL_SERIAL_H

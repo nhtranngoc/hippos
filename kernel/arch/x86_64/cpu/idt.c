@@ -1,98 +1,98 @@
 #include <stdio.h>
 
 #include <kernel/cpu/idt.h>
-#include <kernel/klog.h>
+#include <kernel/log/ulog.h>
 
 cpu_status_t *exception_handler(cpu_status_t *context) {
     switch (context->vector_number) {
         case 0:
-        kerror("Interrupt: Divide Error.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Divide Error.");
         break;
         
         case 1:
-        kerror("Interrupt: Debug Exception.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Debug Exception.");
         break;
 
         case 2:
-        kerror("Interrupt: Non Maskable External Interrupt.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Non Maskable External Interrupt.");
         break;
 
         case 3:
-        kerror("Interrupt: Breakpoint Reached.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Breakpoint Reached.");
         break;
 
         case 4:
-        kerror("Interrupt: Overflow.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Overflow.");
         break;
 
         case 5:
-        kerror("Interrupt: BOUND Range Exceeded.\n");
+        ULOG_CRITICAL("Critical, Interrupt: BOUND Range Exceeded.");
         break;
 
         case 6:
-        kerror("Interrupt: Invalid Opcode (Undefined Opcode).\n");
+        ULOG_CRITICAL("Critical, Interrupt: Invalid Opcode (Undefined Opcode).");
         break;
 
         case 7:
-        kerror("Interrupt: Device Not Available (No Math Coprocessor).\n");
+        ULOG_CRITICAL("Critical, Interrupt: Device Not Available (No Math Coprocessor).");
         break;
 
         case 8:
-        kerror("Interrupt: Double Fault.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Double Fault.");
         break;
 
         case 9:
-        kerror("Interrupt: Coprocessor Segment Overrun.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Coprocessor Segment Overrun.");
         break;
 
         case 10:
-        kerror("Interrupt: Invalid TSS.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Invalid TSS.");
         break;
 
         case 11:
-        kerror("Interrupt: Segment Not Present.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Segment Not Present.");
         break;
 
         case 12:
-        kerror("Interrupt: Stack-Segment Fault.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Stack-Segment Fault.");
 
         case 13:
-        kerror("Interrupt: General Protection Fault.\n");
+        ULOG_CRITICAL("Critical, Interrupt: General Protection Fault.");
         break;
 
         case 14:
-        kerror("Interrupt: Page Fault.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Page Fault.");
         break;
 
         case 15:
-        kerror("Interrupt: This interrupt is reserved by Intel. This should not be used.\n");
+        ULOG_CRITICAL("Critical, Interrupt: This interrupt is reserved by Intel. This should not be used.");
         break;
 
         case 16:
-        kerror("Interrupt: x87 FPU Floating-Point Error (Math Fault).\n");
+        ULOG_CRITICAL("Critical, Interrupt: x87 FPU Floating-Point Error (Math Fault).");
         break;
 
         case 17:
-        kerror("Interrupt: Alignment Check Fault.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Alignment Check Fault.");
         break;
 
         case 18:
-        kerror("Interrupt: Machine Check. Abort.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Machine Check. Abort.");
         break;
 
         case 19:
-        kerror("Interrupt: SIMD Floating-Point Exception Fault.\n");
+        ULOG_CRITICAL("Critical, Interrupt: SIMD Floating-Point Exception Fault.");
         break;
 
         case 20:
-        kerror("Interrupt: Virtualization Exception Fault.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Virtualization Exception Fault.");
 
         case 21: 
-        kerror("Interrupt: Control Protection Exception Fault.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Control Protection Exception Fault.");
         break;
 
         default:
-        kerror("Interrupt: Unexpected Interrupt.\n");
+        ULOG_CRITICAL("Critical, Interrupt: Unexpected Interrupt.");
         break;
     }
 

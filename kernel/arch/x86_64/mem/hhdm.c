@@ -1,7 +1,7 @@
 #include <stddef.h>
 
 #include <kernel/mem/hhdm.h>
-#include <kernel/klog.h>
+#include <kernel/log/ulog.h>
 #include <kernel/limine.h>
 
 uint64_t g_hhdm_offset;
@@ -14,12 +14,12 @@ static volatile struct limine_hhdm_request hhdm_request = {
 
 void hhdm_initialize(void) {
     if (hhdm_request.response == NULL) {
-        kerror("HHDM Request Failed.\n");
+        ULOG_CRITICAL("HHDM Request Failed.");
         return;
     }
 
     // This should be  0x ffff ffff 8001 5a80?
 
     g_hhdm_offset = hhdm_request.response->offset;
-    klog("HHDM Set.\n");
+    ULOG_INFO("HHDM Set.");
 }

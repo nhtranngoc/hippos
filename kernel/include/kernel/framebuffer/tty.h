@@ -24,6 +24,11 @@ void terminal_writestring(const uint8_t* data);
 void terminal_putchar(uint8_t c);
 #endif
 
+void terminal_set_text_color(uint32_t c);
+void terminal_reset_text_color(void);
+void terminal_set_background_color(uint32_t c);
+void terminal_reset_background_color(void);
+
 void terminal_scroll(void);
 
 #endif

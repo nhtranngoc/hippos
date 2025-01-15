@@ -13,8 +13,7 @@
 #include <kernel/ssfn.h>
 #include <kernel/io/io.h>
 #include <kernel/limine.h>
-#include <kernel/klog.h>
-#include <kernel/io/serial.h>
+#include <kernel/log/ulog.h>
 
 // The Limine requests can be placed anywhere, but it is important that
 // the compiler does not optimise them away, so, usually, they should
@@ -66,7 +65,7 @@ void terminal_initialize(void) {
     ssfn_dst.h = framebuffer->height;                           /* height */
     ssfn_dst.p = framebuffer->pitch;
     ssfn_dst.x = ssfn_dst.y = 0;                /* pen position */
-    ssfn_dst.fg = COLORS_TEXT_FG;                     /* foreground color */
+    terminal_reset_text_color();
 
     for (int y = 0; y < framebuffer->height; y++) {
         for (int x = 0; x < framebuffer->width; x++) {
@@ -77,7 +76,7 @@ void terminal_initialize(void) {
     }
 
     printf(title_card);
-    ksuccess("Terminal initialized.\n");
+    ULOG_INFO("Success, Terminal initialized.");
 }
 
 void terminal_putentryat(uint32_t c, uint32_t color, size_t x, size_t y) {
@@ -160,4 +159,20 @@ void terminal_write(const uint8_t* data, size_t size) {
 
 void terminal_writestring(const uint8_t* data) {
 	terminal_write(data, strlen(data));
+}
+
+void terminal_set_text_color(uint32_t c) {
+    ssfn_dst.fg = c;
+}
+
+void terminal_reset_text_color(void) {
+    ssfn_dst.fg = COLORS_TEXT_FG;
+}
+
+void terminal_set_background_color(uint32_t c) {
+    ssfn_dst.bg = c;
+}
+
+void terminal_reset_background_color(void) {
+    ssfn_dst.bg = COLORS_BG;
 }

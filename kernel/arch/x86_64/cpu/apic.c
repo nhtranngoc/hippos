@@ -4,7 +4,7 @@
 
 #include <kernel/cpu/apic.h>
 #include <kernel/cpu/cpudet.h>
-#include <kernel/klog.h>
+#include <kernel/log/ulog.h>
 #include <kernel/io/io.h>
 #include <kernel/mem/hhdm.h>
 
@@ -75,18 +75,18 @@ static inline void lapic_write(uint32_t offset, uint32_t val)
 void apic_initialize(void) {
     // Detect APIC support
     if (!check_apic()) {
-        kerror("APIC Not Detected.\n");
+        ULOG_CRITICAL("Critical, APIC Not Detected.");
         // idk, die I guess?
         return;
     }
 
     // Check for presence of MSR
     if(!check_msr()) {
-       kerror("MSR Not Detected.\n");
+       ULOG_CRITICAL("Critical, MSR Not Detected.");
        return;
     }
 
-    ksuccess("APIC & MSR Detected.\n");
+    ULOG_INFO("Success, APIC & MSR Detected.");
 
     // Disable 8259PIC
     // Initialization Signal
@@ -104,15 +104,14 @@ void apic_initialize(void) {
     
     outb(PIC_MASTER_DATA, 0xFF);
     outb(PIC_SLAVE_DATA, 0xFF);
-    klog("8259 PIC Disabled.\n");
+    ULOG_INFO("8259 PIC Disabled.");
  
     // Enable LAPIC
     // Hardware enable local APIC
     apic_base = cpu_get_apic_base();
     cpu_set_apic_base(apic_base);
-    printf("APIC Base address: %x\n", apic_base - g_hhdm_offset);
-
-    printf("Higher half offset at: %x\n", g_hhdm_offset);
+    ULOG_INFO("APIC Base address: %x", apic_base - g_hhdm_offset);
+    ULOG_INFO("Higher half offset at: %x", g_hhdm_offset);
 
     #define APIC_BASE_PA 0xFEE00000
     // uintptr_t apic_base_test = APIC_BASE_PA;

@@ -1,6 +1,8 @@
-#include <kernel/io/serial.h>
 #include <kernel/io/io.h>
-#include <kernel/klog.h>
+#include <kernel/io/serial.h>
+#include <kernel/log/ulog.h>
+
+bool is_initialized;
 
 /** serial_configure_baud_rate:
  *  Sets the speed of the data being sent. The default speed of a serial
@@ -49,10 +51,11 @@ void serial_configure_modem(unsigned short com) {
  *  @param com      COM port
  */
 void serial_initialize(unsigned short com) {
-    klog("Initializing Serial port...\n");
+    is_initialized = false;
+    ULOG_INFO("Initializing Serial port...");
 
     if (com < 1) {
-        kerror("COM Port invalid.\n");
+        ULOG_CRITICAL("Critical, COM Port invalid.");
         return;
     }
 
@@ -61,7 +64,8 @@ void serial_initialize(unsigned short com) {
     serial_configure_line(com);
     serial_configure_modem(com);
 
-    ksuccess("Serial port initialized.\n");
+    ULOG_INFO("Success, Serial port initialized.");
+    is_initialized = true;
 }
 
 /** serial_is_transmit_fifo_empty
@@ -94,4 +98,8 @@ void serial_write(char *buf, unsigned short com) {
         outb(com, buf[i]);
         i++;
     }
+}
+
+bool is_serial_initialized(void) {
+    return is_initialized;
 }
