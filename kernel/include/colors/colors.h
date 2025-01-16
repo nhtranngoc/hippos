@@ -3,8 +3,8 @@
 
 // Themes
 #define COLORS_TEXT_FG          0xF0F6FC
-// #define COLORS_BG               0x0D1117 // Dark gray or blue?
-#define COLORS_BG               0x082437
+#define COLORS_BG               0x0D1117 // Dark gray or blue?
+// #define COLORS_BG               0x082437
 
 // Basic colors
 #define COLORS_GREEN                    0x008000

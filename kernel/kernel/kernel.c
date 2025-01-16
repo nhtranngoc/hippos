@@ -16,6 +16,7 @@
 #include <kernel/cpu/apic.h>
 #include <kernel/mem/hhdm.h>
 #include <kernel/mem/mem.h>
+#include <colors/colors.h>
 
 // Set the base revision to 3, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -49,7 +50,9 @@ void kernel_main(void) {
     log_initialize();
 
     // Detect CPU
+    terminal_set_text_color(COLORS_WHITE);
     detect_cpu();
+    terminal_reset_text_color();
 
     // GDT
     gdt_initialize();

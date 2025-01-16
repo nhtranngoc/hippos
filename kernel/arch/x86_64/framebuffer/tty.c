@@ -26,20 +26,21 @@ static volatile struct limine_framebuffer_request framebuffer_request = {
     .revision = 0
 };
 
-char *title_card = 
-    "\n\
-       888      d8b                    .d88888b.   .d8888b.  \n\
-       888      Y8P                   d88P\" \"Y88b d88P  Y88b \n\
-       888                            888     888 Y88b.      \n\
-       88888b.  888 88888b.  88888b.  888     888  \"Y888b.   \n\
-       888 \"88b 888 888 \"88b 888 \"88b 888     888     \"Y88b. \n\
-       888  888 888 888  888 888  888 888     888       \"888 \n\
-       888  888 888 888 d88P 888 d88P Y88b. .d88P Y88b  d88P \n\
-       888  888 888 88888P\"  88888P\"   \"Y88888P\"   \"Y8888P\"  \n\
-                     888      888                             \n\
-                     888      888                             \n\
-                     888      888                             \n\n";
-
+char *title_card[12] = 
+    {
+        "\n",
+        "       888      d8b                    .d88888b.   .d8888b.  \n",
+        "       888      Y8P                   d88P\" \"Y88b d88P  Y88b \n",
+        "       888                            888     888 Y88b.      \n",
+        "       88888b.  888 88888b.  88888b.  888     888  \"Y888b.   \n",
+        "       888 \"88b 888 888 \"88b 888 \"88b 888     888     \"Y88b. \n",
+        "       888  888 888 888  888 888  888 888     888       \"888 \n",
+        "       888  888 888 888 d88P 888 d88P Y88b. .d88P Y88b  d88P \n",
+        "       888  888 888 88888P\"  88888P\"   \"Y88888P\"   \"Y8888P\"  \n"
+        "                     888      888                             \n",
+        "                     888      888                             \n",
+        "                     888      888                             \n\n"
+    };
 
 void terminal_initialize(void) {    
     // Ensure we got a framebuffer.
@@ -75,7 +76,12 @@ void terminal_initialize(void) {
         }
     }
 
-    printf(title_card);
+    for(int i = 0; i < 11; i++) {
+        uint32_t color = 0xff0000 + (i * (0xffffff / 8));
+        terminal_set_text_color(color);
+        printf(title_card[i]);
+    }
+
     ULOG_INFO("Success, Terminal initialized.");
 }
 

@@ -147,7 +147,6 @@ void print_memmap(struct limine_memmap_entry **entries, uint64_t entry_count) {
 void *kalloc(size_t page_count) {
     // If our allocation pointer exceed available memory, we couldn't find anything
     if (pmm_bitmap.used_pages >= pmm_bitmap.total_pages) {
-        // Todo: Implement proper log levels
         ULOG_CRITICAL("Out of Memory.");
         return NULL;
     }

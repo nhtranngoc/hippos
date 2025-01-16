@@ -41,9 +41,8 @@ void kernel_log(ulog_level_t severity, const char *msg) {
     }
 
     printf("[%s]: ", ulog_level_name(severity));
-
-    terminal_reset_text_color();
     printf("%s\n", msg);
+    terminal_reset_text_color();
 }
 
 void log_initialize(void) {
